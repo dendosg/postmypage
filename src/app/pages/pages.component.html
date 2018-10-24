@@ -1,0 +1,26 @@
+<div class="card">
+  <div class="card-header">
+    Để thêm các page bạn đang quản lý, hãy nhập mã code theo hướng dẫn sau
+
+    <ol>
+      <li>Thêm <a href="https://drive.google.com/file/d/1AhMwJC1h7MHuUGhDUKjzi5t4tj998dBd/view" target="_blank">"Get Code Postpage"</a> vào Bookmarks theo <a href="https://drive.google.com/file/d/13atVuIsjro839knoNSoTNz3sVQkTQ_sN/view" target="_blank" >hướng dẫn này</a>. (Bước này chỉ cần làm 1 lần duy nhất. Nếu trình duyệt đã có "Get Code Postpage" thì bỏ qua bước này)</li>
+      <li>Truy cập vào 
+        <a href="https://www.facebook.com/" target="_blank">https://www.facebook.com/</a> và nhấn Get Code Postpage trên thanh Bookmarks. <a href="https://drive.google.com/file/d/1dwbIHnH5LxoPc0aN2mHlFNqAM6nBydwG/view" target="_blank" >XEM HƯỚNG DẪN</a>
+      </li>
+      <li>Copy Code và dán vào ô bên dưới </li>
+      <li>Nhấn Submit</li>
+    </ol>
+  </div>
+  <div class="card-body">
+    <form #formvalue="ngForm" (ngSubmit)="onFormSubmit(formvalue)">
+      <div class="input-group">
+        <textarea class="form-control" aria-label="With textarea" cols="10" rows="5" name="access_token" [(ngModel)]="code"></textarea>
+      </div>
+      <button type="submit" #submit class="btn btn-primary btn-block" hidden>Submit</button>
+    </form>
+  </div>
+  <p *ngIf="isAdd" style="text-align: center" >Loading...</p>
+  <div class="card-footer text-muted d-flex">
+    <button type="submit" class="btn btn-primary btn-block" (click)="submit.click()">Submit</button>
+  </div>
+</div>
