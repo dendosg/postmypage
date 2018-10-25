@@ -10,10 +10,7 @@ export class DashboardService {
   }
   getInfoPageFromUid(UID, callback) {
     this.getMyPages().subscribe(res => {
-      var info = res.find(function (element) {
-        let huy = JSON.parse(JSON.stringify(element)).id == UID;
-        return huy
-      })
+      var info = res.find(element => element['id'] == UID)
       callback(undefined, info)
     })
   }
