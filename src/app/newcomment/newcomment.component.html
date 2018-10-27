@@ -17,16 +17,16 @@
       <div class="card-body">
         
         <div class="alert alert-primary" role="alert" *ngFor="let cmt of arrComments | paginate: { itemsPerPage: 10, currentPage: page }"
-          (click)="onClickCmt(cmt)" data-toggle="tooltip" data-placement="top" [title]="cmt.cmt.created_time | date:'HH:mm dd-MM-yyyy'">
+          (click)="onClickCmt(cmt)" data-toggle="tooltip" data-placement="top" [title]="cmt.comment.created_time | date:'HH:mm dd-MM-yyyy'">
           <div class="row d-flex">
             <span class="from_name">
-              <a href="https://www.facebook.com/{{cmt.cmt.from.id}}" target="_blank">
-                <img src="https://graph.facebook.com/{{cmt.cmt.from.id}}/picture?width=30&height=30" alt=""> {{cmt.cmt.from.name}}
+              <a href="https://www.facebook.com/{{cmt.comment.from.id}}" target="_blank">
+                <img src="https://graph.facebook.com/{{cmt.comment.from.id}}/picture?width=30&height=30" alt=""> {{cmt.comment.from.name}}
               </a>
             </span>
             <button type="button" class="btn btn-outline-success ml-auto p-2">View & Reply</button>
           </div>
-          {{cmt.cmt.message}}
+          {{cmt.comment.message}}
         </div>
       </div>
       <!-- Card Footer -->

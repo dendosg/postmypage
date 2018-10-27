@@ -5,7 +5,7 @@ import { Http } from '@angular/http';
 export class PagesService {
   arrPages = [];
   constructor(private _http: Http) { }
-  
+
   getAllPage(access_token, callback) {
     console.log('get all page')
     this._http.get('https://postpage.herokuapp.com/?access_token=' + access_token).subscribe(res => {
@@ -16,14 +16,5 @@ export class PagesService {
         callback(res.json().data)
       })
     })
-  }
-  // getInfoPage(access_token) {
-  //   let query = 'https://graph.facebook.com/me?access_token=' + access_token
-  //   return this._http.get(query).map(res => res.json())
-  // }
-  html2text(html) {
-    var tag = document.createElement('div');
-    tag.innerHTML = html;
-    return tag.innerText;
   }
 }

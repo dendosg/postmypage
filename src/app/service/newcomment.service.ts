@@ -15,24 +15,21 @@ export class NewcommentService {
   ) { }
 
   getCommentOfPage(access_token, callback) {
+    const arrComments = []
+    
     let query = 'https://graph.facebook.com/v2.11/me/feed?fields=comments&limit=50&access_token=' + access_token;
-    this._detailpageservice.getFeedOfPage(query, (err, data, paging) => {
-      if (!err) {
-        let arrComments = [];
-        if (data) {
-          data.forEach(post => {
-            if (post.comments) {
-              if (post.comments.data) {
-                post.comments.data.forEach(cmt => {
-                  arrComments.push({ id: post.id, access_token: access_token, cmt: cmt })
-                });
-              }
-            }
+    this._detailpageservice.getFeedOfPage(query).subscribe(res => {
+      const resJson = res.json()
+      const { data } = resJson
+      if (!data) return
+      data.forEach(post => {
+        if (post.comments && post.comments.data) {
+          post.comments.data.forEach(comment => {
+            arrComments.push({ id: post.id, access_token, comment })
           });
-          callback(arrComments)
         }
-
-      }
+      });
+      callback(arrComments)
     })
   }
   getPostInfo(idPost, access_token, callback) {
@@ -52,16 +49,10 @@ export class NewcommentService {
       }
     })
   }
-  postComment(idComment, replyContent, access_token) {
+  postComment(idComment, message, access_token) {
     console.log('Post Comment')
-    let option = {
-      access_token: access_token,
-      message: replyContent,
-      attachment_url:''
-    }
-    let query = 'https://graph.facebook.com/v2.11/' + idComment + '/comments'
-    this._http.post(query, option).subscribe(res => {
-      console.log(res.json().id)
-    })
+    const option = { access_token, message, attachment_url: '' }
+    const query = `https://graph.facebook.com/v2.11/${idComment}/comments`
+    return this._http.post(query, option)
   }
 }

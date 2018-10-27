@@ -12,7 +12,7 @@
     <!-- Start cmt -->
     <div class="alert alert-danger comment" role="alert">
       <h5 class="card-title">
-        <img class="avatar" src="https://graph.facebook.com/{{commentInfo.cmt.from.id}}/picture?width=20&height=20" alt=""> {{commentInfo.cmt.message}}</h5>
+        <img class="avatar" src="https://graph.facebook.com/{{commentInfo.comment.from.id}}/picture?width=20&height=20" alt=""> {{commentInfo.comment.message}}</h5>
     </div>
 
     <!-- End cmt -->
@@ -35,7 +35,7 @@
     <div class="input-group reply">
       <textarea class="form-control" aria-label="With textarea" [(ngModel)]="replyContent"  placeholder="Nhập tin nhắn và nhấn Send để trả lời..."></textarea>
       <div class="input-group-append">
-        <button type="button" class="btn btn-outline-primary" (click)="reply(commentInfo.cmt.id)">Send</button>
+        <button type="button" class="btn btn-outline-primary" (click)="reply(commentInfo.comment.id)">Send</button>
       </div>
     </div>
     <!-- End Reply -->

@@ -144,9 +144,9 @@ export class HomeComponent implements OnInit {
                   description: content
                 }
                 this._postcontentservice.postVideo(this.arrDayTime[access_token], contentVideo, access_token, (err, res) => {
-                  this._dashboardservice.getInfoPage(access_token, (err, info) => {
+                  this._dashboardservice.getInfoPage(access_token).subscribe(info => {
                     if (info) {
-                      this.arrPosted.push({ post_id: res.id, page_id: info.id, page_name: info.name })
+                      this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
                       this.loadingService.complete()
                       this.resetForm(form)
                     }
@@ -156,9 +156,9 @@ export class HomeComponent implements OnInit {
                 let publish_time;
                 this.scheduled_publish_time ? publish_time = this.scheduled_publish_time : publish_time = this.arrDayTime[access_token]
                 this._postcontentservice.postImages(publish_time, content, this.arrImages, access_token, (err, res) => {
-                  this._dashboardservice.getInfoPage(access_token, (err, info) => {
+                  this._dashboardservice.getInfoPage(access_token).subscribe(info => {
                     if (info) {
-                      this.arrPosted.push({ post_id: res.id, page_id: info.id, page_name: info.name })
+                      this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
                       this.loadingService.complete()
                       this.resetForm(form)
                     }
@@ -180,13 +180,14 @@ export class HomeComponent implements OnInit {
                   this.alert('Fail')
                   this.loadingService.complete()
                 } else {
-                  this._dashboardservice.getInfoPage(access_token, (err, info) => {
-                    if (info) {
-                      this.arrPosted.push({ post_id: res.id, page_id: info.id, page_name: info.name })
-                      this.loadingService.complete()
-                      this.resetForm(form)
-                    }
-                  })
+                  this._dashboardservice.getInfoPage(access_token)
+                    .subscribe(info => {
+                      if (info) {
+                        this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
+                        this.loadingService.complete()
+                        this.resetForm(form)
+                      }
+                    })
                 }
               })
             }

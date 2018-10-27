@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { map } from 'rxjs/operators';
 @Injectable()
 export class DashboardService {
 
@@ -14,10 +15,8 @@ export class DashboardService {
       callback(undefined, info)
     })
   }
-  getInfoPage(access_token, callback) {
+  getInfoPage(access_token) {
     let query = 'https://graph.facebook.com/me?access_token=' + access_token
-    this._http.get(query).subscribe(res => {
-      callback(undefined, res.json())
-    })
+    return this._http.get(query)
   }
 }

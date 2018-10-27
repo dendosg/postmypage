@@ -23,32 +23,32 @@ export class NewcommentComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadingService.start()
+    // this.loadingService.start()
     this._dashboardservice.getMyPages().subscribe(res => {
       this.arrPages = res
-      this.arrPages.forEach(page => {
-        this.arrUIDadmin.push(page.id)
-      });
+      this.arrUIDadmin = this.arrPages.map(page => page.id)
       this.getNewCommentOfAllPages()
     })
   }
-  onClickCmt(cmt) {
-    this.loadingService.start()
-    this._newcommentservice.getSubComment(cmt.cmt.id, cmt.access_token, (dataSubComment) => {
-      cmt.subCmt = dataSubComment
+  onClickCmt(comment) {
+    if (!comment) return
+    // this.loadingService.start()
+    this._newcommentservice.getSubComment(comment.comment.id, comment.access_token, (dataSubComment) => {
+      comment.subCmt = dataSubComment
     })
-    this._newcommentservice.getPostInfo(cmt.id, cmt.access_token, (infopost) => {
-      cmt.post = infopost
-      this.commentInfo = cmt
-      this.loadingService.complete()
+    this._newcommentservice.getPostInfo(comment.id, comment.access_token, (infopost) => {
+      comment.post = infopost
+      this.commentInfo = comment
+      // this.loadingService.complete()
     })
   }
   removeCommentByAdmin() {
     this.arrComments = this.arrComments.filter(comment => {
-      let from_id = comment.cmt.from.id
-      return !this.arrUIDadmin.includes(from_id)
+      if (!comment || !comment.comment || !comment.comment.from) return true
+      const { id } = comment.comment.from
+      return !this.arrUIDadmin.includes(id)
     })
-    this.loadingService.complete()
+    // this.loadingService.complete()
   }
   getNewCommentOfAllPages() {
     this.arrPages.forEach(page => {
@@ -57,31 +57,28 @@ export class NewcommentComponent implements OnInit {
         this.arrComments = this.arrComments.concat(data)
         this.removeCommentByAdmin()
         this.arrComments.sort(function (a, b) {
-          let aTime = new Date(a.cmt.created_time).getTime()
-          let bTime = new Date(b.cmt.created_time).getTime()
+          let aTime = new Date(a.comment.created_time).getTime()
+          let bTime = new Date(b.comment.created_time).getTime()
           return (bTime - aTime);
         });
       })
     });
   }
   onPageSelected(access_token) {
-    this.loadingService.start()
+    // this.loadingService.start()
     this.arrComments = []
-    if (access_token != 'all') {
-      this._newcommentservice.getCommentOfPage(access_token, (data) => {
-        this.arrComments = data.sort(function (a, b) {
-          let aTime = new Date(a.cmt.created_time).getTime()
-          let bTime = new Date(b.cmt.created_time).getTime()
-          return (bTime - aTime);
-        });
-        this.removeCommentByAdmin()
-        this.loadingService.complete()
-      })
-    } else {
-      // Choose Tat car
-      this.getNewCommentOfAllPages()
+    if (access_token == 'all') {
+      return this.getNewCommentOfAllPages()
     }
-
+    this._newcommentservice.getCommentOfPage(access_token, (data) => {
+      this.arrComments = data.sort(function (a, b) {
+        let aTime = new Date(a.comment.created_time).getTime()
+        let bTime = new Date(b.comment.created_time).getTime()
+        return (bTime - aTime);
+      });
+      this.removeCommentByAdmin()
+      // this.loadingService.complete()
+    })
   }
 
 
