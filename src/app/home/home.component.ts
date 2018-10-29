@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { Observable } from 'rxjs/Observable';
-import { Http } from '@angular/http';
 import { PostcontentService } from '../service/postcontent.service';
 import { DashboardService } from '../service/dashboard.service';
 
@@ -33,7 +32,6 @@ export class HomeComponent implements OnInit {
   constructor(
     private _db: AngularFireDatabase,
     public _storage: AngularFireStorage,
-    private _http: Http,
     private _postcontentservice: PostcontentService,
     private _dashboardservice: DashboardService,
     private loadingService: LoadingService,
@@ -44,10 +42,10 @@ export class HomeComponent implements OnInit {
     this.arrPages = this._db.list('postmypage/users/' + localToken + '/pages').valueChanges()
   }
   async  upload(image) {
-    let random = Math.floor(Math.random() * 100000)
-    let res = await this._storage.upload('postmypage/' + new Date().getTime() + random, image)
-    let { fullPath } = res.metadata
-    let xxxxx = await this._db.list('postmypage/imageuploaded').push(fullPath)
+    const random = Math.floor(Math.random() * 100000)
+    const res = await this._storage.upload('postmypage/' + new Date().getTime() + random, image)
+    const { fullPath } = res.metadata
+    const xxxxx = await this._db.list('postmypage/imageuploaded').push(fullPath)
     this.arrImageOnStorage.push({
       key: xxxxx.key,
       path: fullPath
@@ -61,21 +59,18 @@ export class HomeComponent implements OnInit {
   }
   onFileSelected(event) {
     this.attached_media = [];
-    let images = event.target.files
-    if (images.length) {
-      let isTypeVideo = images[0].type.indexOf('video') == 0
-      if (isTypeVideo) {
-        this.isVideo = true;
-        this.arrImages = [];
-        console.log('video')
-      } else {
-        this.isVideo = false
-        // this.arrImages = []
-      }
+    const {files} = event.target
+    if (!files.length) return
+    const isTypeVideo = files[0].type.includes('video')
+    if (isTypeVideo) {
+      this.isVideo = true;
+      this.arrImages = [];
+      console.log('video')
     } else {
-      console.log('Không có file được chọn')
+      this.isVideo = false
+      // this.arrImages = []
     }
-    this.uploadImages(images)
+    this.uploadImages(files)
   }
 
   alert(body) {
@@ -87,7 +82,7 @@ export class HomeComponent implements OnInit {
     })
   }
   removeImage(img) {
-    let position = this.arrImages.indexOf(img)
+    const position = this.arrImages.indexOf(img)
     this.arrImages.splice(position, 1);
   }
   resetForm(form) {
@@ -104,7 +99,7 @@ export class HomeComponent implements OnInit {
   }
   onFormSubmit(form) {
     // Start datetime
-    let formvalue = form.value
+    const formvalue = form.value
     if (formvalue['pickerAll'] != '|') {
       console.log('all')
       let timeAll = this._postcontentservice.getTime(form.value['pickerAll'])
@@ -114,10 +109,8 @@ export class HomeComponent implements OnInit {
         let dash = 'datetimepicker-'
         let positionDash = key.indexOf('datetimepicker')
         if (positionDash != -1 && formvalue[key] != '|') {
-
-          var acc = key.slice(positionDash + dash.length)
-          var huy = this._postcontentservice.getTime(form.value[key])
-          this.arrDayTime[acc] = (huy)
+          const acc = key.slice(positionDash + dash.length)
+          this.arrDayTime[acc] = this._postcontentservice.getTime(form.value[key])
         }
       })
     }
@@ -126,74 +119,62 @@ export class HomeComponent implements OnInit {
 
     let isPageSelected = Object.values(form.value).indexOf(true)
     if (isPageSelected == -1) {
-      console.log('Chưa chọn page')
       this.choosePage = true;
-      this.alert('Chọn page muốn đăng')
-    } else {
-      let formvalue = form.value
-      let content = formvalue.content
-      if (content || this.arrImages) {
-        this.loadingService.start()
-        if (this.arrImages.length) {
-          Object.keys(form.value).map(access_token => {
-            if (formvalue[access_token] === true && access_token != 'chooseAll') {
-              if (this.isVideo) {
-                let contentVideo = {
-                  video: this.arrImages[0],
-                  title: formvalue.titleVideo,
-                  description: content
-                }
-                this._postcontentservice.postVideo(this.arrDayTime[access_token], contentVideo, access_token, (err, res) => {
-                  this._dashboardservice.getInfoPage(access_token).subscribe(info => {
-                    if (info) {
-                      this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
-                      this.loadingService.complete()
-                      this.resetForm(form)
-                    }
-                  })
-                })
-              } else {
-                let publish_time;
-                this.scheduled_publish_time ? publish_time = this.scheduled_publish_time : publish_time = this.arrDayTime[access_token]
-                this._postcontentservice.postImages(publish_time, content, this.arrImages, access_token, (err, res) => {
-                  this._dashboardservice.getInfoPage(access_token).subscribe(info => {
-                    if (info) {
-                      this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
-                      this.loadingService.complete()
-                      this.resetForm(form)
-                    }
-                  })
-                })
-              }
-
+      return this.alert('Chọn page muốn đăng')
+    }
+    let { content } = formvalue
+    if (!content && !this.arrImages.length) return
+    this.loadingService.start()
+    if (this.arrImages.length) {
+      console.log('Post images')
+      Object.keys(form.value).map(access_token => {
+        if (formvalue[access_token] === true && access_token != 'chooseAll') {
+          if (this.isVideo) {
+            let contentVideo = {
+              video: this.arrImages[0],
+              title: formvalue.titleVideo,
+              description: content
             }
+            return this._postcontentservice.postVideo(this.arrDayTime[access_token], contentVideo, access_token, (err, res) => {
+              this._dashboardservice.getInfoPage(access_token).subscribe(info => {
+                if (!info) return
+                this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
+                this.loadingService.complete()
+                this.resetForm(form)
+              })
+            })
+          }
+          let publish_time = this.scheduled_publish_time ? this.scheduled_publish_time : this.arrDayTime[access_token]
+          this._postcontentservice.postImages(publish_time, content, this.arrImages, access_token, (err, res) => {
+            this._dashboardservice.getInfoPage(access_token).subscribe(info => {
+              if (info) {
+                this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
+                this.loadingService.complete()
+                this.resetForm(form)
+              }
+            })
           })
-        } else {
-          console.log('Post Text')
-          Object.keys(formvalue).map(access_token => {
-            if (formvalue[access_token] === true && access_token != 'chooseAll') {
-              let publish_time;
-              this.scheduled_publish_time ? publish_time = this.scheduled_publish_time : publish_time = this.arrDayTime[access_token]
 
-              this._postcontentservice.postStatus(publish_time, content, access_token, (err, res) => {
-                if (err) {
-                  this.alert('Fail')
+        }
+      })
+    } else {
+      console.log('Post Text')
+      Object.keys(formvalue).map(access_token => {
+        if (formvalue[access_token] === true && access_token != 'chooseAll') {
+          let publish_time = this.scheduled_publish_time ? this.scheduled_publish_time : this.arrDayTime[access_token]
+          this._postcontentservice.postStatus(publish_time, content, access_token, (err, res) => {
+            if (err) return this.alert('Fail')
+            this._dashboardservice.getInfoPage(access_token)
+              .subscribe(info => {
+                if (info) {
+                  this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
                   this.loadingService.complete()
-                } else {
-                  this._dashboardservice.getInfoPage(access_token)
-                    .subscribe(info => {
-                      if (info) {
-                        this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
-                        this.loadingService.complete()
-                        this.resetForm(form)
-                      }
-                    })
+                  this.resetForm(form)
                 }
               })
-            }
           })
         }
-      }
+      })
     }
   }
 }
