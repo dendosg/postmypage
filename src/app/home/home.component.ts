@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit {
   }
   onFileSelected(event) {
     this.attached_media = [];
-    const {files} = event.target
+    const { files } = event.target
     if (!files.length) return
     const isTypeVideo = files[0].type.includes('video')
     if (isTypeVideo) {
@@ -137,6 +137,7 @@ export class HomeComponent implements OnInit {
             }
             return this._postcontentservice.postVideo(this.arrDayTime[access_token], contentVideo, access_token, (err, res) => {
               this._dashboardservice.getInfoPage(access_token).subscribe(info => {
+                info = info.json()
                 if (!info) return
                 this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
                 this.loadingService.complete()
@@ -147,11 +148,11 @@ export class HomeComponent implements OnInit {
           let publish_time = this.scheduled_publish_time ? this.scheduled_publish_time : this.arrDayTime[access_token]
           this._postcontentservice.postImages(publish_time, content, this.arrImages, access_token, (err, res) => {
             this._dashboardservice.getInfoPage(access_token).subscribe(info => {
-              if (info) {
-                this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
-                this.loadingService.complete()
-                this.resetForm(form)
-              }
+              info = info.json()
+              if (!info) return
+              this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
+              this.loadingService.complete()
+              this.resetForm(form)
             })
           })
 
@@ -166,11 +167,11 @@ export class HomeComponent implements OnInit {
             if (err) return this.alert('Fail')
             this._dashboardservice.getInfoPage(access_token)
               .subscribe(info => {
-                if (info) {
-                  this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
-                  this.loadingService.complete()
-                  this.resetForm(form)
-                }
+                info = info.json()
+                if (!info) return
+                this.arrPosted.push({ post_id: res.id, page_id: info['id'], page_name: info['name'] })
+                this.loadingService.complete()
+                this.resetForm(form)
               })
           })
         }
