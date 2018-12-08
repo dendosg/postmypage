@@ -102,27 +102,27 @@ export class HomeComponent implements OnInit {
 
   alert(body) {
     this.notificationService.create({
-      body: body,
+      body,
       styleType: "success",
       timeout: 4000,
       rateLimit: false
     });
   }
   removeImage(img) {
-    const position = this.arrImages.indexOf(img);
-    this.arrImages.splice(position, 1);
+    const index = this.arrImages.indexOf(img);
+    this.arrImages.splice(index, 1);
   }
   resetForm(form) {
     form.reset();
     this.arrImages = [];
     this.arrDayTime = [];
     this.isVideo = false;
-    // Loc cac anh trong database uploaded
-    for (let item_delete of this.arrImageOnStorage) {
-      this._db.list("postmypage/imageuploaded").remove(item_delete.key);
-      this._storage.ref(item_delete.path).delete();
-    }
     this.arrImageOnStorage = [];
+    // Loc cac anh trong database uploaded
+    // for (let item_delete of this.arrImageOnStorage) {
+    //   this._db.list("postmypage/imageuploaded").remove(item_delete.key);
+    //   this._storage.ref(item_delete.path).delete();
+    // }
   }
   onFormSubmit(form) {
     // Start datetime
