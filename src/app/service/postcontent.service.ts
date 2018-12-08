@@ -11,18 +11,26 @@ const localToken = localStorage.getItem('token')
 @Injectable()
 export class PostcontentService {
   constructor(private _http: Http, private _db: AngularFireDatabase, private ng2imgur: Ng2ImgurUploader) { }
-  image2imgur(image) {
-    type ImgurUploadOptions = {
-      clientId: string,
-      imageData: Blob,
-      title?: string
-    }
-    let uploadOptions: ImgurUploadOptions = {
-      clientId: '238ff8a99cfcf80',
-      imageData: image
-    }
-    return this.ng2imgur.upload(uploadOptions)
+
+  public uploadXHR(data: FormData): Observable<any> {
+    return Observable.create(observer => {
+      data.append('upload_preset', "joynit-user")
+      const xhr = new XMLHttpRequest;
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                observer.next(JSON.parse(xhr.response));
+                observer.complete();
+            } else {
+            observer.error(xhr.response);
+            }
+        }
+    };
+      xhr.open("post", "https://api.cloudinary.com/v1_1/gtappdev/image/upload");
+      xhr.send(data);
+    })
   }
+
   uploadOneImage(url_image, access_token) {
     let fd = new FormData
     fd.append('access_token', access_token)

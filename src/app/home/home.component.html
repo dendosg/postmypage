@@ -30,8 +30,8 @@
           <!-- Input ảnh + video -->
           <div class="input-group" id="inputfile">
             <div class="custom-file">
-              <input type="file" accept="image/*" class="custom-file-input" #addImage (change)="onFileSelected($event)" multiple>
-              <input type="file" accept="video/*" class="custom-file-input" #addVideo (change)="onFileSelected($event)">
+              <input type="file" accept="image/*" class="custom-file-input" #addImage (change)="onFileChange(addImage.files)" multiple>
+              <input type="file" accept="video/*" class="custom-file-input" #addVideo (change)="onFileChange(addVideo.files)">
             </div>
           </div>
           <!-- Progress bar -->
