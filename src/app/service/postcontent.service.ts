@@ -32,66 +32,36 @@ export class PostcontentService {
   }
 
   uploadOneImage(url_image, access_token) {
-    let fd = new FormData
+    const fd = new FormData
     fd.append('access_token', access_token)
     fd.append('published', 'false')
     fd.append('url', url_image)
-    return this._http.post('https://graph.facebook.com/v2.11/me/photos', fd);
+    return this._http.post('https://graph.facebook.com/v2.11/me/photos', fd)
   }
 
-  uploadImages(arrImages, access_token, callback) {
-    let arrRes = []
-    arrImages.forEach(async image => {
-      arrRes.push(this.uploadOneImage(image, access_token));
-    });
-    forkJoin(arrRes).subscribe(res => {
-      let huy = JSON.parse(JSON.stringify(res));
-      let attached_media = [];
-      huy.forEach(res => {
-        attached_media.push({ media_fbid: JSON.parse(res._body).id })
-      });
-      callback(undefined, attached_media);
-    })
+  uploadImages(arrImages, access_token) {
+    const processUploadImages = arrImages.map(image => this.uploadOneImage(image, access_token))
+    return forkJoin(processUploadImages).toPromise()
   }
-
-  getTime(timestring) {
-    if (!timestring) return
-    let dash = timestring.indexOf('|')
-    if (dash) {
-      let date = timestring.slice(0, dash)
-      let time = timestring.slice(dash + 1)
-      if (!time) {
-        time = '19:00'
-      }
-      let x = new Date(date + ' ' + time + ' UTC+7').getTime().toString()
-      return parseInt(x.slice(0, x.length - 3))
-    }
-  }
-  postStatus(scheduled_publish_time, content, access_token, callback) {
+  
+  postStatus(scheduled_publish_time, content, access_token) {
     const option = {
       access_token, message: content, scheduled_publish_time, published: !scheduled_publish_time
     }
     const query = 'https://graph.facebook.com/v2.11/me/feed';
-    this._http.post(query, option).map(res => res.json()).subscribe(res => {
-      callback(undefined, res)
-    })
+   return this._http.post(query, option)
   }
-  postImages(scheduled_publish_time, message, arrImages, access_token, callback) {
-    this.uploadImages(arrImages, access_token, (err, attached_media) => {
-      if (attached_media.length == 1) {
-        attached_media.push(attached_media[0])
-      }
-      let option = {
-        access_token, message, attached_media, scheduled_publish_time, published: !scheduled_publish_time
-      }
-      let query = 'https://graph.facebook.com/v2.11/me/feed'
-      this._http.post(query, option).map(res => res.json()).subscribe(res => {
-        callback(undefined, res)
-      })
-    })
+  async postImages(scheduled_publish_time, message, arrImages, access_token) {
+    const imagesUploadedResult = await this.uploadImages(arrImages, access_token)
+    const attached_media = imagesUploadedResult.map(result => ({ media_fbid: result.json().id }))
+    const option = {
+      access_token, message, attached_media, scheduled_publish_time, published: !scheduled_publish_time
+    }
+    const query = 'https://graph.facebook.com/v2.11/me/feed'
+    return this._http.post(query, option)
   }
-  postVideo(scheduled_publish_time, content, access_token, callback) {
-    let option = {
+  postVideo(scheduled_publish_time, content, access_token) {
+    const option = {
       access_token,
       scheduled_publish_time,
       file_url: content.video,
@@ -99,10 +69,8 @@ export class PostcontentService {
       description: content.description,
       published: !scheduled_publish_time
     }
-    let query = 'https://graph.facebook.com/v2.11/me/videos'
-    this._http.post(query, option).map(res => res.json()).subscribe(res => {
-      callback(undefined, res)
-    })
+    const query = 'https://graph.facebook.com/v2.11/me/videos'
+    return this._http.post(query, option)
   }
 }
 

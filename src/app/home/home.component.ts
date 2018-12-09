@@ -144,6 +144,16 @@ export class HomeComponent implements OnInit {
     //   this._storage.ref(item_delete.path).delete();
     // }
   }
+  renderResult(result,page,form){
+    const postedId = result.json().id;
+    this.arrPosted.push({
+      post_id: postedId,
+      page_id: page.id,
+      page_name: page.name
+    });
+    this.loadingService.complete();
+    this.resetForm(form);
+  }
   onFormSubmit(form) {
     const formvalue = form.value;
     const selectedPages = this.arrPages.filter(page => page.isSelected);
@@ -168,72 +178,33 @@ export class HomeComponent implements OnInit {
 
       // post video
       if (this.isVideo) {
-        let contentVideo = {
+        const contentVideo = {
           video: this.arrImages[0],
           title: formvalue.titleVideo,
           description: content
         };
-        return this._postcontentservice.postVideo(
-          this.arrDayTime[access_token],
-          contentVideo,
-          access_token,
-          (err, res) => {
-            this._dashboardservice.getInfoPage(access_token).subscribe(info => {
-              info = info.json();
-              if (!info) return;
-              this.arrPosted.push({
-                post_id: res.id,
-                page_id: info["id"],
-                page_name: info["name"]
-              });
-              this.loadingService.complete();
-              this.resetForm(form);
-            });
-          }
-        );
+        return this._postcontentservice
+          .postVideo(this.arrDayTime[access_token], contentVideo, access_token)
+          .subscribe(res => {
+            this.renderResult(res,page,form)
+          });
       }
       // post image
       if (this.arrImages.length) {
-        return this._postcontentservice.postImages(
-          timePublish,
-          content,
-          this.arrImages,
-          access_token,
-          (err, res) => {
-            this._dashboardservice.getInfoPage(access_token).subscribe(info => {
-              info = info.json();
-              if (!info) return;
-              this.arrPosted.push({
-                post_id: res.id,
-                page_id: info["id"],
-                page_name: info["name"]
-              });
-              this.loadingService.complete();
-              this.resetForm(form);
-            });
-          }
-        );
+        return this._postcontentservice
+          .postImages(timePublish, content, this.arrImages, access_token)
+          .then(res =>
+            res.subscribe(postImageUploaded => {
+              this.renderResult(postImageUploaded,page,form)
+            })
+          );
       }
       // post status
-      this._postcontentservice.postStatus(
-        timePublish,
-        content,
-        access_token,
-        (err, res) => {
-          if (err) return this.alert("Fail");
-          this._dashboardservice.getInfoPage(access_token).subscribe(info => {
-            info = info.json();
-            if (!info) return;
-            this.arrPosted.push({
-              post_id: res.id,
-              page_id: info["id"],
-              page_name: info["name"]
-            });
-            this.loadingService.complete();
-            this.resetForm(form);
-          });
-        }
-      );
+      this._postcontentservice
+        .postStatus(timePublish, content, access_token)
+        .subscribe(res => {
+          this.renderResult(res,page,form)
+        });
     });
   }
 }
