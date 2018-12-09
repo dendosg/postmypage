@@ -51,15 +51,14 @@
               <!-- Len lich all -->
               <div class="row" (click)="inputtimeAll.click()">
                 <div class="col-md-3">
-                  <img src="https://png.icons8.com/ios/16/000000/calendar.png" data-toggle="tooltip" data-placement="top" title="Lên lịch đăng bài cho tất cả page">
-
+                  <i class="far fa-clock" style="font-size:30px" data-toggle="tooltip" data-placement="top" title="Lên lịch đăng bài cho tất cả page"></i>
                 </div>
                 <div class="col-md-9">
-                  <span *ngIf="pickerAll.time" class="badge badge-light"> {{pickerAll.date+'|'+pickerAll.time}} </span>
+                  <span *ngIf="pickerAll.selectedTime" class="badge badge-light"> {{timeService.getDateFormat(pickerAll.selectedTime,'HH:mm - DD/MM/YYYY')}} </span>
                 </div>
               </div>
               <input #inputtimeAll name="pickerAll" type="hidden" [value]="pickerAll.date" data-toggle="modal" data-target="#all" [(ngModel)]="pickerAll.date+'|'+pickerAll.time">
-              <app-all #pickerAll> </app-all>
+              <app-all #pickerAll (handleValue)="setTimePublishAllPage($event)" > </app-all>
               <!-- End len lich all -->
               <ngx-toggle name="selectAllPage" [(ngModel)]="allSelected" (click)="selectAllPage()" >
                 <strong class="color-red" [hidden]="!allSelected">Unselect All</strong>
@@ -83,7 +82,7 @@
                 </div>
                 <div class="row" (click)="inputtime.click()" id="picker">
                   <div class="col-md-3">
-                    <img src="https://png.icons8.com/ios/16/000000/calendar.png" data-toggle="tooltip" data-placement="top" title="Lên lịch đăng bài cho {{page.name}}">
+                    <i class="fas fa-clock" style="font-size:30px" data-toggle="tooltip" data-placement="top" title="Lên lịch đăng bài cho {{page.name}}"></i>
                   </div>
                   <div class="col-md-9">
                     <span *ngIf="page.timePublish" class="badge badge-light">{{timeService.getDateFormat(page.timeFormat,'HH:mm - DD/MM/YYYY')}}
