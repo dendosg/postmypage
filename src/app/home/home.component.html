@@ -2,6 +2,7 @@
   <div class="card-header">
     Công cụ đăng bài lên fanpage
   </div>
+  
   <div class="card-body">
     <form #form="ngForm" (ngSubmit)="onFormSubmit(form)">
       <div class="row">
@@ -45,6 +46,7 @@
             <div class="card-header">
               Select Pages
             </div>
+            
             <div class="card-body pages">
               <!-- Len lich all -->
               <div class="row" (click)="inputtimeAll.click()">
@@ -59,29 +61,33 @@
               <input #inputtimeAll name="pickerAll" type="hidden" [value]="pickerAll.date" data-toggle="modal" data-target="#all" [(ngModel)]="pickerAll.date+'|'+pickerAll.time">
               <app-all #pickerAll> </app-all>
               <!-- End len lich all -->
-              <ngx-toggle name="chooseAll" [(ngModel)]="toggleChk">
-                <strong class="color-red" [hidden]="!toggleChk">Unselect All</strong>
-                <strong class="color-green" [hidden]="toggleChk">Select All</strong>
+              <ngx-toggle name="selectAllPage" [(ngModel)]="allSelected" (click)="selectAllPage()" >
+                <strong class="color-red" [hidden]="!allSelected">Unselect All</strong>
+                <strong class="color-green" [hidden]="allSelected">Select All</strong>
               </ngx-toggle>
-              <div class="row page" *ngFor="let page of arrPages | async">
+
+              <div class="row page" *ngFor="let page of arrPages">
                 <div class="col-2">
-                  <ngx-checkbox [ngModel]="toggleChk" [name]="page.access_token">
-                  </ngx-checkbox>
+                  <!-- <ngx-checkbox [ngModel]="true" [name]="page.isSelected" (click)="page.isSelected = !page.isSelected" >
+                  </ngx-checkbox> -->
+                  <ngx-toggle name="toggle1" [(ngModel)]="page.isSelected">
+                  </ngx-toggle>
                 </div>
                 <div class="col-4">
                   <img class="avatar" src="https://graph.facebook.com/{{page.id}}/picture?width=50&height=50" alt=""> </div>
                 <div class="col-6">
                   <p> {{page.name}} </p>
-                  <input #inputtime type="hidden" [value]="picker.date" data-toggle="modal" [attr.data-target]="'#' + page.id" [(ngModel)]="picker.date+'|'+picker.time"
+                  <input #inputtime type="hidden" [value]="picker.date" data-toggle="modal" [attr.data-target]="'#' + page.id" [(ngModel)]="picker.selectedTime"
                     name="datetimepicker-{{page.access_token}}">
-                  <app-timepicker [name]="page.name" [id]="page.id" #picker></app-timepicker>
+                  <app-timepicker [name]="page.name" [id]="page.id" (handleValue)="setTimePublish(page,$event)" #picker></app-timepicker>
                 </div>
                 <div class="row" (click)="inputtime.click()" id="picker">
                   <div class="col-md-3">
                     <img src="https://png.icons8.com/ios/16/000000/calendar.png" data-toggle="tooltip" data-placement="top" title="Lên lịch đăng bài cho {{page.name}}">
                   </div>
                   <div class="col-md-9">
-                    <span *ngIf="picker.time" class="badge badge-light"> {{picker.date+'|'+picker.time}} </span>
+                    <span *ngIf="page.timePublish" class="badge badge-light">{{timeService.getDateFormat(page.timeFormat,'HH:mm - DD/MM/YYYY')}}
+                    </span>
                   </div>
                 </div>
               </div>

@@ -7,6 +7,8 @@ import { DashboardService } from "../service/dashboard.service";
 
 import { LoadingService } from "@swimlane/ngx-ui";
 import { NotificationService } from "@swimlane/ngx-ui";
+import { TimeService } from "../service/time.service";
+
 const localToken = localStorage.getItem("token");
 
 @Component({
@@ -15,10 +17,9 @@ const localToken = localStorage.getItem("token");
   styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit {
-  chooseAll;
-  toggleChk;
+  allSelected;
   content;
-  arrPages: Observable<any[]>;
+  arrPages = [];
   choosePage = false;
   showProgress = false;
   arrDayTime = [];
@@ -35,13 +36,32 @@ export class HomeComponent implements OnInit {
     private _postcontentservice: PostcontentService,
     private _dashboardservice: DashboardService,
     private loadingService: LoadingService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public timeService: TimeService
   ) {}
 
   ngOnInit() {
-    this.arrPages = this._db
+    this._db
       .list("postmypage/users/" + localToken + "/pages")
-      .valueChanges();
+      .valueChanges()
+      .subscribe(arrPages => {
+        this.arrPages = arrPages.map(page => ({
+          ...page,
+          isSelected: false,
+          timePublish: ""
+        }));
+      });
+  }
+  setTimePublish(page, time) {
+    const timePublish = new Date(time).getTime() / 1000;
+    page.timeFormat = time;
+    return (page.timePublish = timePublish);
+  }
+  dateChanged(e) {}
+  selectAllPage() {
+    this.arrPages.map(page => {
+      page.isSelected = !this.allSelected;
+    });
   }
   // async upload(image) {
   //   const random = Math.floor(Math.random() * 100000);
@@ -125,121 +145,95 @@ export class HomeComponent implements OnInit {
     // }
   }
   onFormSubmit(form) {
-    // Start datetime
     const formvalue = form.value;
-    if (formvalue["pickerAll"] != "|") {
-      console.log("all");
-      let timeAll = this._postcontentservice.getTime(form.value["pickerAll"]);
-      this.scheduled_publish_time = timeAll;
-    } else {
-      Object.keys(formvalue).map(key => {
-        let dash = "datetimepicker-";
-        let positionDash = key.indexOf("datetimepicker");
-        if (positionDash != -1 && formvalue[key] != "|") {
-          const acc = key.slice(positionDash + dash.length);
-          this.arrDayTime[acc] = this._postcontentservice.getTime(
-            form.value[key]
-          );
-        }
-      });
-    }
-    // End datetime
+    const selectedPages = this.arrPages.filter(page => page.isSelected);
+    if (!selectedPages.length) return this.alert("Chọn page muốn đăng!");
 
-    let isPageSelected = Object.values(form.value).indexOf(true);
-    if (isPageSelected == -1) {
-      this.choosePage = true;
-      return this.alert("Chọn page muốn đăng");
-    }
-    let { content } = formvalue;
+    const { content } = formvalue;
     if (!content && !this.arrImages.length) return;
     this.loadingService.start();
-    if (this.arrImages.length) {
-      console.log("Post images");
-      Object.keys(form.value).map(access_token => {
-        if (formvalue[access_token] === true && access_token != "chooseAll") {
-          if (this.isVideo) {
-            let contentVideo = {
-              video: this.arrImages[0],
-              title: formvalue.titleVideo,
-              description: content
-            };
-            return this._postcontentservice.postVideo(
-              this.arrDayTime[access_token],
-              contentVideo,
-              access_token,
-              (err, res) => {
-                this._dashboardservice
-                  .getInfoPage(access_token)
-                  .subscribe(info => {
-                    info = info.json();
-                    if (!info) return;
-                    this.arrPosted.push({
-                      post_id: res.id,
-                      page_id: info["id"],
-                      page_name: info["name"]
-                    });
-                    this.loadingService.complete();
-                    this.resetForm(form);
-                  });
-              }
-            );
+
+    selectedPages.forEach(page => {
+      const { access_token, timePublish } = page;
+      const distance = this.timeService.getDistance(
+        new Date().getTime(),
+        timePublish * 1000
+      );
+      if (timePublish && distance < 1) {
+        this.loadingService.complete();
+        return this.alert(
+          "Thời gian lên lịch sớm nhất là trước 1 tiếng. Vui lòng chọn lại thời gian đăng bài!"
+        );
+      }
+
+      // post video
+      if (this.isVideo) {
+        let contentVideo = {
+          video: this.arrImages[0],
+          title: formvalue.titleVideo,
+          description: content
+        };
+        return this._postcontentservice.postVideo(
+          this.arrDayTime[access_token],
+          contentVideo,
+          access_token,
+          (err, res) => {
+            this._dashboardservice.getInfoPage(access_token).subscribe(info => {
+              info = info.json();
+              if (!info) return;
+              this.arrPosted.push({
+                post_id: res.id,
+                page_id: info["id"],
+                page_name: info["name"]
+              });
+              this.loadingService.complete();
+              this.resetForm(form);
+            });
           }
-          let publish_time = this.scheduled_publish_time
-            ? this.scheduled_publish_time
-            : this.arrDayTime[access_token];
-          this._postcontentservice.postImages(
-            publish_time,
-            content,
-            this.arrImages,
-            access_token,
-            (err, res) => {
-              this._dashboardservice
-                .getInfoPage(access_token)
-                .subscribe(info => {
-                  info = info.json();
-                  if (!info) return;
-                  this.arrPosted.push({
-                    post_id: res.id,
-                    page_id: info["id"],
-                    page_name: info["name"]
-                  });
-                  this.loadingService.complete();
-                  this.resetForm(form);
-                });
-            }
-          );
+        );
+      }
+      // post image
+      if (this.arrImages.length) {
+        return this._postcontentservice.postImages(
+          timePublish,
+          content,
+          this.arrImages,
+          access_token,
+          (err, res) => {
+            this._dashboardservice.getInfoPage(access_token).subscribe(info => {
+              info = info.json();
+              if (!info) return;
+              this.arrPosted.push({
+                post_id: res.id,
+                page_id: info["id"],
+                page_name: info["name"]
+              });
+              this.loadingService.complete();
+              this.resetForm(form);
+            });
+          }
+        );
+      }
+      // post status
+      this._postcontentservice.postStatus(
+        timePublish,
+        content,
+        access_token,
+        (err, res) => {
+          if (err) return this.alert("Fail");
+          this._dashboardservice.getInfoPage(access_token).subscribe(info => {
+            info = info.json();
+            if (!info) return;
+            this.arrPosted.push({
+              post_id: res.id,
+              page_id: info["id"],
+              page_name: info["name"]
+            });
+            this.loadingService.complete();
+            this.resetForm(form);
+          });
         }
-      });
-    } else {
-      console.log("Post Text");
-      Object.keys(formvalue).map(access_token => {
-        if (formvalue[access_token] === true && access_token != "chooseAll") {
-          let publish_time = this.scheduled_publish_time
-            ? this.scheduled_publish_time
-            : this.arrDayTime[access_token];
-          this._postcontentservice.postStatus(
-            publish_time,
-            content,
-            access_token,
-            (err, res) => {
-              if (err) return this.alert("Fail");
-              this._dashboardservice
-                .getInfoPage(access_token)
-                .subscribe(info => {
-                  info = info.json();
-                  if (!info) return;
-                  this.arrPosted.push({
-                    post_id: res.id,
-                    page_id: info["id"],
-                    page_name: info["name"]
-                  });
-                  this.loadingService.complete();
-                  this.resetForm(form);
-                });
-            }
-          );
-        }
-      });
-    }
+      );
+    });
   }
 }
