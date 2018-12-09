@@ -5,8 +5,11 @@ import { Observable } from "rxjs/Observable";
 import { PostcontentService } from "../service/postcontent.service";
 import { DashboardService } from "../service/dashboard.service";
 
-import { LoadingService } from "@swimlane/ngx-ui";
-import { NotificationService } from "@swimlane/ngx-ui";
+import {
+  LoadingService,
+  NotificationService,
+  AlertService
+} from "@swimlane/ngx-ui";
 import { TimeService } from "../service/time.service";
 
 const localToken = localStorage.getItem("token");
@@ -37,7 +40,8 @@ export class HomeComponent implements OnInit {
     private _dashboardservice: DashboardService,
     private loadingService: LoadingService,
     private notificationService: NotificationService,
-    public timeService: TimeService
+    public timeService: TimeService,
+    public alertService: AlertService
   ) {}
 
   ngOnInit() {
@@ -60,8 +64,8 @@ export class HomeComponent implements OnInit {
   setTimePublishAllPage(time) {
     const timePublish = new Date(time).getTime() / 1000;
     this.arrPages.map(page => {
-      page.timePublish = timePublish
-      page.timeFormat = time
+      page.timePublish = timePublish;
+      page.timeFormat = time;
     });
   }
   dateChanged(e) {}
@@ -127,13 +131,8 @@ export class HomeComponent implements OnInit {
   //   this.uploadImages(files);
   // }
 
-  alert(body) {
-    this.notificationService.create({
-      body,
-      styleType: "success",
-      timeout: 4000,
-      rateLimit: false
-    });
+  alert(message) {
+    this.alertService.alert({ title: "Fail", content: message });
   }
   removeImage(img) {
     const index = this.arrImages.indexOf(img);

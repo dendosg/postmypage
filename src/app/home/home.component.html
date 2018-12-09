@@ -46,7 +46,6 @@
             <div class="card-header">
               Select Pages
             </div>
-            
             <div class="card-body pages">
               <!-- Len lich all -->
               <div class="row" (click)="inputtimeAll.click()">
@@ -61,21 +60,20 @@
               <app-all #pickerAll (handleValue)="setTimePublishAllPage($event)" > </app-all>
               <!-- End len lich all -->
               <ngx-toggle name="selectAllPage" [(ngModel)]="allSelected" (click)="selectAllPage()" >
-                <strong class="color-red" [hidden]="!allSelected">Unselect All</strong>
-                <strong class="color-green" [hidden]="allSelected">Select All</strong>
+                <strong class="color-red" [hidden]="!allSelected">Unselect All Pages</strong>
+                <strong class="color-green" [hidden]="allSelected">Select All Pages</strong>
               </ngx-toggle>
 
-              <div class="row page" *ngFor="let page of arrPages">
+              <div class="row page" *ngFor="let page of arrPages" [ngClass]="{'selected-page':page.isSelected}">
                 <div class="col-2">
                   <!-- <ngx-checkbox [ngModel]="true" [name]="page.isSelected" (click)="page.isSelected = !page.isSelected" >
                   </ngx-checkbox> -->
-                  <ngx-toggle name="toggle1" [(ngModel)]="page.isSelected">
-                  </ngx-toggle>
+                  <ngx-toggle name="toggle1" [(ngModel)]="page.isSelected"></ngx-toggle>
                 </div>
                 <div class="col-4">
                   <img class="avatar" src="https://graph.facebook.com/{{page.id}}/picture?width=50&height=50" alt=""> </div>
                 <div class="col-6">
-                  <p> {{page.name}} </p>
+                  <p class="page-name"> {{page.name}} </p>
                   <input #inputtime type="hidden" [value]="picker.date" data-toggle="modal" [attr.data-target]="'#' + page.id" [(ngModel)]="picker.selectedTime"
                     name="datetimepicker-{{page.access_token}}">
                   <app-timepicker [name]="page.name" [id]="page.id" (handleValue)="setTimePublish(page,$event)" #picker></app-timepicker>
