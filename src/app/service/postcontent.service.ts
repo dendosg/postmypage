@@ -44,7 +44,7 @@ export class PostcontentService {
     return forkJoin(processUploadImages).toPromise()
   }
   
-  postStatus(scheduled_publish_time, content, access_token) {
+  postStatus(scheduled_publish_time, content, access_token) : Observable<any> {
     const option = {
       access_token, message: content, scheduled_publish_time, published: !scheduled_publish_time
     }
@@ -53,7 +53,9 @@ export class PostcontentService {
   }
   async postImages(scheduled_publish_time, message, arrImages, access_token) {
     const imagesUploadedResult = await this.uploadImages(arrImages, access_token)
-    const attached_media = imagesUploadedResult.map(result => ({ media_fbid: result.json().id }))
+    const attached_media = imagesUploadedResult.map(result => ({
+      media_fbid: JSON.parse(result["_body"]).id
+    }));
     const option = {
       access_token, message, attached_media, scheduled_publish_time, published: !scheduled_publish_time
     }

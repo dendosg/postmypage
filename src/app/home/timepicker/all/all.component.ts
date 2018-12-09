@@ -1,21 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { TimeService } from "../../../service/time.service";
 
 @Component({
-  selector: 'app-all',
-  templateUrl: './all.component.html',
-  styleUrls: ['./all.component.css']
+  selector: "app-all",
+  templateUrl: "./all.component.html",
+  styleUrls: ["./all.component.css"]
 })
 export class AllComponent implements OnInit {
-  date = '';
-  time = '';
-  constructor() { }
+  @Output() handleValue = new EventEmitter();
+  selectedTime;
+  constructor(public timeService: TimeService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
   clickOK() {
-    if (!this.time) {
-      alert('Nhập đúng định dạng thời gian, ví dụ 01/04/2018, 20:00 CH')
-    }
+    this.handleValue.emit(this.selectedTime);
   }
-
+  reset() {
+    this.selectedTime = null;
+  }
 }

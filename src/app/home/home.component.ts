@@ -57,6 +57,13 @@ export class HomeComponent implements OnInit {
     page.timeFormat = time;
     return (page.timePublish = timePublish);
   }
+  setTimePublishAllPage(time) {
+    const timePublish = new Date(time).getTime() / 1000;
+    this.arrPages.map(page => {
+      page.timePublish = timePublish
+      page.timeFormat = time
+    });
+  }
   dateChanged(e) {}
   selectAllPage() {
     this.arrPages.map(page => {
@@ -144,7 +151,7 @@ export class HomeComponent implements OnInit {
     //   this._storage.ref(item_delete.path).delete();
     // }
   }
-  renderResult(result,page,form){
+  renderResult(result, page, form) {
     const postedId = result.json().id;
     this.arrPosted.push({
       post_id: postedId,
@@ -186,7 +193,7 @@ export class HomeComponent implements OnInit {
         return this._postcontentservice
           .postVideo(this.arrDayTime[access_token], contentVideo, access_token)
           .subscribe(res => {
-            this.renderResult(res,page,form)
+            this.renderResult(res, page, form);
           });
       }
       // post image
@@ -195,7 +202,7 @@ export class HomeComponent implements OnInit {
           .postImages(timePublish, content, this.arrImages, access_token)
           .then(res =>
             res.subscribe(postImageUploaded => {
-              this.renderResult(postImageUploaded,page,form)
+              this.renderResult(postImageUploaded, page, form);
             })
           );
       }
@@ -203,7 +210,7 @@ export class HomeComponent implements OnInit {
       this._postcontentservice
         .postStatus(timePublish, content, access_token)
         .subscribe(res => {
-          this.renderResult(res,page,form)
+          this.renderResult(res, page, form);
         });
     });
   }
