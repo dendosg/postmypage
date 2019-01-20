@@ -100,9 +100,14 @@ export class HomeComponent implements OnInit {
     if (!file) return Promise.resolve(null);
     const formData = new FormData();
     formData.append("file", file);
-
+    let type = "image";
+    if (file.type.includes("video")) {
+      this.showProgress = true
+      this.isVideo = true;
+      type = "video";
+    }
     return this._postcontentservice
-      .uploadXHR(formData)
+      .uploadXHR(formData, type)
       .map(res => res.url)
       .toPromise()
       .catch(error => Promise.resolve(null));
@@ -111,7 +116,9 @@ export class HomeComponent implements OnInit {
   public onFileChange(files) {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      this.uploadFile(file).then(imgUrl => this.arrImages.push(imgUrl));
+      this.uploadFile(file).then(imgUrl => {
+        if (this.isVideo) this.showProgress = false;
+        this.arrImages.push(imgUrl)});
     }
   }
 
