@@ -52,14 +52,25 @@ export class PostcontentService {
    return this._http.post(query, option)
   }
   async postImages(scheduled_publish_time, message, arrImages, access_token) {
-    const imagesUploadedResult = await this.uploadImages(arrImages, access_token)
-    const attached_media = imagesUploadedResult.map(result => ({
-      media_fbid: JSON.parse(result["_body"]).id
-    }));
-    const option = {
-      access_token, message, attached_media, scheduled_publish_time, published: !scheduled_publish_time
+    let option = {}, query = '';
+    if (arrImages.length === 1) {
+      option = {
+        access_token,
+        message,
+        url: arrImages[0],
+        scheduled_publish_time, published: !scheduled_publish_time
+      }
+      query = 'https://graph.facebook.com/v2.11/me/photos'
+    } else {
+      const imagesUploadedResult = await this.uploadImages(arrImages, access_token)
+      const attached_media = imagesUploadedResult.map(result => ({
+        media_fbid: JSON.parse(result["_body"]).id
+      }));
+      option = {
+        access_token, message, attached_media, scheduled_publish_time, published: !scheduled_publish_time
+      }
+      query = 'https://graph.facebook.com/v2.11/me/feed'
     }
-    const query = 'https://graph.facebook.com/v2.11/me/feed'
     return this._http.post(query, option)
   }
   postVideo(scheduled_publish_time, content, access_token) {

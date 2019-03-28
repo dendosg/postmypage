@@ -26,12 +26,12 @@ export class PagesComponent implements OnInit {
   ngOnInit() {
     this._http.get('https://postpage.herokuapp.com/')
   }
-  onFormSubmit(form) {
-    const {access_token} = form.value
-    if(!access_token) return alert('Hãy nhập mã code theo hướng dẫn trước khi submit')
-    console.log(access_token)
+  async onFormSubmit(form) {
+    const { access_token } = form.value
+    if (!access_token) return alert('Hãy nhập mã code theo hướng dẫn trước khi submit')
     this.isAdd = true
-    this._pagesService.getAllPage(access_token, (data) => {
+    const extendEdToken = await this._pagesService.getExtendedToken(access_token)
+    this._pagesService.getAllPage(extendEdToken, (data) => {
       this._db.list('postmypage/users/' + localToken).set('pages', data)
       this._db.list('postmypage/users/' + localToken).set('access_token', access_token)
       window.location.href = '/'
