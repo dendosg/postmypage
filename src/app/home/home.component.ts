@@ -122,21 +122,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // onFileSelected(event) {
-  //   this.attached_media = [];
-  //   const { files } = event.target;
-  //   if (!files.length) return;
-  //   const isTypeVideo = files[0].type.includes("video");
-  //   if (isTypeVideo) {
-  //     this.isVideo = true;
-  //     this.arrImages = [];
-  //     console.log("video");
-  //   } else {
-  //     this.isVideo = false;
-  //     // this.arrImages = []
-  //   }
-  //   this.uploadImages(files);
-  // }
 
   alert(message) {
     this.alertService.alert({ title: "Fail", content: message });
@@ -151,12 +136,8 @@ export class HomeComponent implements OnInit {
     this.arrDayTime = [];
     this.isVideo = false;
     this.arrImageOnStorage = [];
-    // Loc cac anh trong database uploaded
-    // for (let item_delete of this.arrImageOnStorage) {
-    //   this._db.list("postmypage/imageuploaded").remove(item_delete.key);
-    //   this._storage.ref(item_delete.path).delete();
-    // }
   }
+  
   renderResult(result, page, form) {
     const postedId = result.json().id;
     this.arrPosted.push({

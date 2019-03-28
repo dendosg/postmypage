@@ -5,12 +5,11 @@ import { Observable } from 'rxjs/Observable';
 import { async } from '@firebase/util';
 import { forEachAsync } from 'forEachAsync';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { Ng2ImgurUploader } from 'ng2-imgur-uploader';
 
 const localToken = localStorage.getItem('token')
 @Injectable()
 export class PostcontentService {
-  constructor(private _http: Http, private _db: AngularFireDatabase, private ng2imgur: Ng2ImgurUploader) { }
+  constructor(private _http: Http, private _db: AngularFireDatabase) { }
 
   public uploadXHR(data: FormData, type: string = 'image'): Observable<any> {
     return Observable.create(observer => {
@@ -31,7 +30,7 @@ export class PostcontentService {
     })
   }
 
-  uploadOneImage(url_image, access_token) {
+  public uploadOneImage(url_image, access_token) {
     const fd = new FormData
     fd.append('access_token', access_token)
     fd.append('published', 'false')
@@ -39,19 +38,19 @@ export class PostcontentService {
     return this._http.post('https://graph.facebook.com/v2.11/me/photos', fd)
   }
 
-  uploadImages(arrImages, access_token) {
+  public uploadImages(arrImages, access_token) {
     const processUploadImages = arrImages.map(image => this.uploadOneImage(image, access_token))
     return forkJoin(processUploadImages).toPromise()
   }
   
-  postStatus(scheduled_publish_time, content, access_token) : Observable<any> {
+  public postStatus(scheduled_publish_time, content, access_token) : Observable<any> {
     const option = {
       access_token, message: content, scheduled_publish_time, published: !scheduled_publish_time
     }
     const query = 'https://graph.facebook.com/v2.11/me/feed';
    return this._http.post(query, option)
   }
-  async postImages(scheduled_publish_time, message, arrImages, access_token) {
+  public async postImages(scheduled_publish_time, message, arrImages, access_token) {
     let option = {}, query = '';
     if (arrImages.length === 1) {
       option = {
@@ -73,7 +72,7 @@ export class PostcontentService {
     }
     return this._http.post(query, option)
   }
-  postVideo(scheduled_publish_time, content, access_token) {
+  public postVideo(scheduled_publish_time, content, access_token) {
     const option = {
       access_token,
       scheduled_publish_time,
