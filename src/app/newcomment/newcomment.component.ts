@@ -72,10 +72,12 @@ export class NewcommentComponent implements OnInit {
           let bTime = new Date(b.comment.created_time).getTime();
           return bTime - aTime;
         });
+        this.arrComments = this.arrComments.map(comment => ({ ...comment, page }))
       });
     });
   }
   onPageSelected(access_token) {
+    const page = this.arrPages.find(page => page.access_token === access_token)
     this.loadingService.start();
     this.arrComments = [];
     if (access_token == "all") {
@@ -88,6 +90,7 @@ export class NewcommentComponent implements OnInit {
         return bTime - aTime;
       });
       this.removeCommentByAdmin();
+      this.arrComments = this.arrComments.map(comment => ({ ...comment, page }))
       this.loadingService.complete();
     });
   }
