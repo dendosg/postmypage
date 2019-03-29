@@ -29,6 +29,7 @@
           {{cmt.comment.message}}
           <br>
           <span class="badge badge-primary">{{cmt?.page?.name}}</span>
+          <span class="badge badge-light">{{getDateFormat(cmt?.comment?.created_time)}}</span>
         </div>
       </div>
       <!-- Card Footer -->
@@ -45,4 +46,3 @@
   </div>
 
 </div>
-

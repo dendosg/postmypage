@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NewcommentService } from "../service/newcomment.service";
 import { DashboardService } from "../service/dashboard.service";
 import { LoadingService } from "@swimlane/ngx-ui";
+import * as moment from 'moment'
 @Component({
   selector: "app-newcomment",
   templateUrl: "./newcomment.component.html",
@@ -76,7 +77,7 @@ export class NewcommentComponent implements OnInit {
       });
     });
   }
-  onPageSelected(access_token) {
+  public onPageSelected(access_token) {
     const page = this.arrPages.find(page => page.access_token === access_token)
     this.loadingService.start();
     this.arrComments = [];
@@ -93,5 +94,8 @@ export class NewcommentComponent implements OnInit {
       this.arrComments = this.arrComments.map(comment => ({ ...comment, page }))
       this.loadingService.complete();
     });
+  }
+  public getDateFormat(time){
+    return moment(time).format('h:mm:ss a, DD/MM/YYYY')
   }
 }
