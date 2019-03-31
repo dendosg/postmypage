@@ -15,3 +15,7 @@
 a:hover{
     text-decoration: none;
 }
+
+.cursor:hover {
+    cursor: pointer;
+}

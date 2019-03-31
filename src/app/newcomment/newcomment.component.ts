@@ -66,16 +66,19 @@ export class NewcommentComponent implements OnInit {
     this.arrPages.forEach(page => {
       let access_token = JSON.parse(JSON.stringify(page)).access_token;
       this._newcommentservice.getCommentOfPage(access_token, data => {
-        this.arrComments = this.arrComments.concat(data);
+        const newdata = data.map(item => ({ ...item, page }))
+        this.arrComments = this.arrComments.concat(newdata);
         this.removeCommentByAdmin();
         this.arrComments.sort(function(a, b) {
           let aTime = new Date(a.comment.created_time).getTime();
           let bTime = new Date(b.comment.created_time).getTime();
           return bTime - aTime;
         });
-        this.arrComments = this.arrComments.map(comment => ({ ...comment, page }))
       });
     });
+  }
+  public openPageInNewTab(pageId){
+    window.open('http://fb.com/' + pageId, '_blank')
   }
   public onPageSelected(access_token) {
     const page = this.arrPages.find(page => page.access_token === access_token)
@@ -96,6 +99,6 @@ export class NewcommentComponent implements OnInit {
     });
   }
   public getDateFormat(time){
-    return moment(time).format('h:mm:ss a, DD/MM/YYYY')
+    return moment(time).format('HH[h]mm, DD/MM/YYYY')
   }
 }
