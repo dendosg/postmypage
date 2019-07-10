@@ -1,0 +1,46 @@
+<div class="card">
+  <div class="card-header">
+    Your pages ( {{myPages.length}} pages)
+  </div>
+  <div class="card-body">
+
+    <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">No.</th>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Like</th>
+          <th scope="col">New Like</th>
+          <th scope="col">Checkins</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let page of myPages; let i = index">
+          <th scope="row"> {{i+1}} </th>
+          <td>
+            <a href="https://www.facebook.com/{{page.id}}" target="_blank"> {{page.name | slice:0:20}}</a>
+          </td>
+          <td>{{page.description | slice:0:20}}</td>
+          <td>{{page.fan_count}}</td>
+          <td> {{page.new_like_count}} </td>
+          <td>{{page.checkins}}</td>
+          <td>
+            <a routerLink="/detail/{{page.id}}">
+              <button type="button" class="btn btn-info">Detail</button>
+            </a>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+
+  </div>
+</div>
+
+<a routerLink="/pages">
+  <button type="submit" class="btn btn-primary btn-block">Add Page</button>
+</a>

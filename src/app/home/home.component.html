@@ -1,0 +1,120 @@
+<div class="card">
+  <div class="card-header">
+    Công cụ đăng bài lên fanpage
+  </div>
+  
+  <div class="card-body">
+    <form #form="ngForm" (ngSubmit)="onFormSubmit(form)">
+      <div class="row">
+        <div class="col-md-8 col-12">
+          <div class="card bg-light mb-3">
+            <div class="card-header">
+              Caption
+            </div>
+            <div class="card-body">
+              <textarea class="form-control" aria-label="With textarea" cols="10" rows="11" name="content" [(ngModel)]="content"></textarea>
+              <input type="text" class="form-control" placeholder="Nhập tiêu đề video ..." *ngIf="isVideo" name="titleVideo" [(ngModel)]="titleVideo"
+                aria-label="Tite video" aria-describedby="basic-addon1">
+            </div>
+            <!-- Footer | Button -->
+            <div class="row card-footer text-muted ">
+              <div class="col-12 col-md-6 p-2">
+                <button type="button" class="btn btn-outline-danger" (click)="addImage.click()">
+                  Add Image</button>
+                <button type="button" class="btn btn-outline-danger" (click)="addVideo.click()">Add Video</button>
+              </div>
+              <div class="col-12 col-md-6 d-flex">
+                <button type="submit" class="btn btn-outline-primary ml-auto p-2">Post it on fanpage</button>
+              </div>
+            </div>
+          </div>
+          <!-- Input ảnh + video -->
+          <div class="input-group" id="inputfile">
+            <div class="custom-file">
+              <input type="file" accept="image/*" class="custom-file-input" #addImage (change)="onFileChange(addImage.files)" multiple>
+              <input type="file" accept="video/*" class="custom-file-input" #addVideo (change)="onFileChange(addVideo.files)">
+            </div>
+          </div>
+          <!-- Progress bar -->
+          <app-loadingimg *ngIf="showProgress" ></app-loadingimg>
+
+
+        </div>
+        <!-- Pages -->
+        <div class="col-md-4 col-12">
+          <div class="card">
+            <div class="card-header">
+              Select Pages
+            </div>
+            <div class="card-body pages">
+              <!-- Len lich all -->
+              <div class="row" (click)="inputtimeAll.click()">
+                <div class="col-md-3">
+                  <i class="far fa-clock" style="font-size:30px" data-toggle="tooltip" data-placement="top" title="Lên lịch đăng bài cho tất cả page"></i>
+                </div>
+                <div class="col-md-9">
+                  <span *ngIf="pickerAll.selectedTime" class="badge badge-light"> {{timeService.getDateFormat(pickerAll.selectedTime,'HH:mm - DD/MM/YYYY')}} </span>
+                </div>
+              </div>
+              <input #inputtimeAll name="pickerAll" type="hidden" [value]="pickerAll.date" data-toggle="modal" data-target="#all" [(ngModel)]="pickerAll.date+'|'+pickerAll.time">
+              <app-all #pickerAll (handleValue)="setTimePublishAllPage($event)" > </app-all>
+              <!-- End len lich all -->
+              <ngx-toggle name="selectAllPage" [(ngModel)]="allSelected" (click)="selectAllPage()" >
+                <strong class="color-red" [hidden]="!allSelected">Unselect All Pages</strong>
+                <strong class="color-green" [hidden]="allSelected">Select All Pages</strong>
+              </ngx-toggle>
+
+              <div class="row page" *ngFor="let page of arrPages" [ngClass]="{'selected-page':page.isSelected}">
+                <div class="col-2">
+                  <!-- <ngx-checkbox [ngModel]="true" [name]="page.isSelected" (click)="page.isSelected = !page.isSelected" >
+                  </ngx-checkbox> -->
+                  <ngx-toggle name="toggle1" [(ngModel)]="page.isSelected"></ngx-toggle>
+                </div>
+                <div class="col-4">
+                  <img class="avatar" src="https://graph.facebook.com/{{page.id}}/picture?width=50&height=50" alt=""> </div>
+                <div class="col-6">
+                  <p class="page-name"> {{page.name}} </p>
+                  <input #inputtime type="hidden" [value]="picker.date" data-toggle="modal" [attr.data-target]="'#' + page.id" [(ngModel)]="picker.selectedTime"
+                    name="datetimepicker-{{page.access_token}}">
+                  <app-timepicker [name]="page.name" [id]="page.id" (handleValue)="setTimePublish(page,$event)" #picker></app-timepicker>
+                </div>
+                <div class="row" (click)="inputtime.click()" id="picker">
+                  <div class="col-md-3">
+                    <i class="fas fa-clock" style="font-size:30px" data-toggle="tooltip" data-placement="top" title="Lên lịch đăng bài cho {{page.name}}"></i>
+                  </div>
+                  <div class="col-md-9">
+                    <span *ngIf="page.timePublish" class="badge badge-light">{{timeService.getDateFormat(page.timeFormat,'HH:mm - DD/MM/YYYY')}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- Hiển thị img -->
+    <div class="showimage d-flex flex-wrap">
+      <div class="imageVideo" *ngFor="let img of arrImages">
+        <img class="delete" src="https://png.icons8.com/office/30/000000/cancel.png" (click)="removeImage(img)">
+        <img [src]="img" width="200" height="200" class="img-thumbnail" *ngIf="!isVideo">
+        <video width="320" height="240" *ngIf="isVideo">
+          <source [src]="img" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <div class="alert alert-primary " role="alert" *ngFor="let post of arrPosted">
+      Posted:
+      <a href="https://www.facebook.com/{{post.post_id}}" target="_blank"> {{post.post_id}} </a>
+      On
+      <a href="https://www.facebook.com/{{post.page_id}}" target="_blank"> {{post.page_name}} </a>
+    </div>
+
+
+  </div>
+
+  <div class="card-footer text-muted">
+    Develope by @xuanhuyjs
+  </div>
+</div>

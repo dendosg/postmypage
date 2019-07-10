@@ -1,0 +1,21 @@
+.col-6{
+    border: 1px solid gray;
+}
+.from_name{
+    color: tomato;
+    font-weight: bold;
+}
+.from_name img{
+    border-radius: 50%
+}
+.newcomment{
+    margin-bottom: 30px;
+    padding: 10px;
+}
+a:hover{
+    text-decoration: none;
+}
+
+.cursor:hover {
+    cursor: pointer;
+}

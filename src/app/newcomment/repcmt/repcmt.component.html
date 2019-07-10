@@ -1,0 +1,43 @@
+<div class="card text-center" *ngIf="commentInfo">
+
+  <div class="card-header" *ngIf="commentInfo.post">
+    <a href="https://www.facebook.com/{{commentInfo.post.id}}" target="_blank">
+      <img class="full_picture"  [src]="commentInfo.post.full_picture" alt="">
+      <p> {{commentInfo.post.message | slice:0:200}} </p>
+    </a>
+  </div>
+
+
+  <div class="card-body">
+    <!-- Start cmt -->
+    <div class="alert alert-danger comment" role="alert">
+      <h5 class="card-title">
+        <img class="avatar" src="https://graph.facebook.com/{{commentInfo.comment.from.id}}/picture?width=20&height=20" alt=""> {{commentInfo.comment.message}}</h5>
+    </div>
+
+    <!-- End cmt -->
+    <!-- Start  subcmt -->
+    <div class="subcmt">
+      <app-subcmt [subcmt]="subcmt" *ngFor="let subcmt of commentInfo.subCmt"> </app-subcmt>
+      <div class="alert alert-primary" role="alert" *ngFor="let reply of arrReply" data-toggle="tooltip" data-placement="top" [title]="reply.created_time | date:'HH:mm dd-MM-yyyy'">
+        {{reply.message}}
+        <img class="avatar" width="20" height="20" src="https://graph.facebook.com/picture?width=15&height=15&access_token={{reply.access_token}}"
+          alt="">
+      </div>
+    </div>
+
+    <!-- End subcmt -->
+  </div>
+
+
+  <div class="card-footer text-muted">
+    <!-- Reply -->
+    <div class="input-group reply">
+      <textarea class="form-control" aria-label="With textarea" [(ngModel)]="replyContent"  placeholder="Nhập tin nhắn và nhấn Send để trả lời..."></textarea>
+      <div class="input-group-append">
+        <button type="button" class="btn btn-outline-primary" (click)="reply(commentInfo.comment.id)">Send</button>
+      </div>
+    </div>
+    <!-- End Reply -->
+  </div>
+</div>

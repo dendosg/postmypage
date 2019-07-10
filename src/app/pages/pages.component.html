@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-header">
+    Để thêm các page bạn đang quản lý, hãy nhập mã code theo hướng dẫn sau
+
+    <ol>
+      <li>
+        Vào link này: <a href="https://developers.facebook.com/tools/explorer/249127368869539" target="_blank">CLICK HERE</a>
+      </li>
+      <li>
+        Nhấp vào Get Token, chọn Get User Access Token
+      </li>
+      <li>
+        Tích chọn manage_pages và publish_pages
+      </li>
+      <li>
+        Nhấn Get Access Token
+      </li>
+      <li>
+        Sau đó cứ nhấn OK để hoàn thành
+      </li>
+      <li>
+          Copy mã Access Token rồi dán vào ô bên dưới
+      </li>
+      <li>Nhấn Submit</li>
+    </ol>
+
+    <span>Video hướng dẫn: <a href="https://youtu.be/7mEV_ICtmfg" target="_blank" rel="noopener noreferrer">https://youtu.be/7mEV_ICtmfg</a> </span>
+  </div>
+  <div class="card-body">
+    <form #formvalue="ngForm" (ngSubmit)="onFormSubmit(formvalue)">
+      <div class="input-group">
+        <textarea class="form-control" aria-label="With textarea" cols="10" rows="5" name="access_token" [(ngModel)]="code"></textarea>
+      </div>
+      <button type="submit" #submit class="btn btn-primary btn-block" hidden>Submit</button>
+    </form>
+  </div>
+  <p *ngIf="isAdd" style="text-align: center" >Loading...</p>
+  <div class="card-footer text-muted d-flex">
+    <button type="submit" class="btn btn-primary btn-block" (click)="submit.click()">Submit</button>
+  </div>
+</div>
