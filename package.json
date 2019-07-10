@@ -8,7 +8,8 @@
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "copy": "rsync -a dist/ deploy/ --delete --exclude 'CNAME' --exclude '.git/' --exclude 'favicon.ico'"
   },
   "private": true,
   "dependencies": {
