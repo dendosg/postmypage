@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "copy": "rsync -a dist/ deploy/ --delete --exclude 'CNAME' --exclude '.git/' --exclude 'favicon.ico'"
+    "deploy": "rsync -a dist/ deploy/ --delete --exclude 'CNAME' --exclude '.git/' --exclude 'favicon.ico'"
   },
   "private": true,
   "dependencies": {
