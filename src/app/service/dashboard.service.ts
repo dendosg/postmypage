@@ -16,7 +16,13 @@ export class DashboardService {
     })
   }
   getInfoPage(access_token) {
-    let query = 'https://graph.facebook.com/me?access_token=' + access_token
+    const fields = [
+      "description",
+      "checkins",
+      "new_like_count",
+      "fan_count"
+    ];
+    const query = `https://graph.facebook.com/me?fields=${fields.join(',')}&access_token=${access_token}` 
     return this._http.get(query)
   }
 }

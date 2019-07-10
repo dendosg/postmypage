@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit {
   constructor(private _dashboardservice: DashboardService, private loadingService: LoadingService) { }
 
   ngOnInit() {
-    // this.loadingService.start()
+    this.loadingService.start()
     this._dashboardservice.getMyPages().subscribe(pages => {
       pages.forEach(page => {
         const access_token = page['access_token']
@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
           if(!res) return
           res = res.json()
           this.myPages.push(res)
-          // this.loadingService.complete()
+          this.loadingService.complete()
         })
       });
     })
