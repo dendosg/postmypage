@@ -20,7 +20,8 @@ export class DashboardService {
       "description",
       "checkins",
       "new_like_count",
-      "fan_count"
+      "fan_count",
+      "name"
     ];
     const query = `https://graph.facebook.com/me?fields=${fields.join(',')}&access_token=${access_token}` 
     return this._http.get(query)
