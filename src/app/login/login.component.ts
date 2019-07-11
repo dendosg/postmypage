@@ -10,7 +10,7 @@ import { NotificationService } from '@swimlane/ngx-ui';
 export class LoginComponent implements OnInit {
   token;
   password;
-  
+  public loading: boolean = false;
   constructor(
     private _loginservice: LoginService,
     private _router: Router,
@@ -28,8 +28,10 @@ export class LoginComponent implements OnInit {
    
   onFormSubmit(from) {
     let formvalue = from.value
+    this.loading = true
     if (formvalue.token && formvalue.password) {
       this._loginservice.authenticate(formvalue.token, formvalue.password, (message, success) => {
+        this.loading = false
         if (success) {
           window.location.reload()
         } else {

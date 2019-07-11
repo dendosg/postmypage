@@ -26,5 +26,6 @@ export const environment = {
     projectId: "postpage4-6b91f",
     storageBucket: "postpage4-6b91f.appspot.com",
     messagingSenderId: "228926840875"
+    // issueanttech@gmail.com
   }
 };
