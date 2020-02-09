@@ -31,10 +31,9 @@ export class PagesComponent implements OnInit {
     if (!access_token) return alert('Hãy nhập mã code theo hướng dẫn trước khi submit')
     this.isAdd = true
     const extendEdToken = await this._pagesService.getExtendedToken(access_token)
-    this._pagesService.getAllPage(extendEdToken, (data) => {
-      this._db.list('postmypage/users/' + localToken).set('pages', data)
-      this._db.list('postmypage/users/' + localToken).set('access_token', access_token)
-      window.location.href = '/'
-    })
+    const allPages = await this._pagesService.getAllPages(extendEdToken);
+    await this._db.list('postmypage/users/' + localToken).set('pages', allPages)
+    const res = await this._db.list('postmypage/users/' + localToken).set('access_token', access_token)
+    this._router.navigate(['/']);
   }
 }
