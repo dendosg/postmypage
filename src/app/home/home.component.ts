@@ -11,6 +11,7 @@ import {
   AlertService
 } from "@swimlane/ngx-ui";
 import { TimeService } from "../service/time.service";
+import { BaseComponent } from "../base.component";
 
 const localToken = localStorage.getItem("token");
 
@@ -19,7 +20,7 @@ const localToken = localStorage.getItem("token");
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent extends BaseComponent implements OnInit {
   allSelected;
   content;
   arrPages = [];
@@ -37,15 +38,16 @@ export class HomeComponent implements OnInit {
     private _db: AngularFireDatabase,
     public _storage: AngularFireStorage,
     private _postcontentservice: PostcontentService,
-    private _dashboardservice: DashboardService,
     private loadingService: LoadingService,
-    private notificationService: NotificationService,
     public timeService: TimeService,
     public alertService: AlertService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit() {
-    this._db
+    this._subscription.add(
+      this._db
       .list("postmypage/users/" + localToken + "/pages")
       .valueChanges()
       .subscribe(arrPages => {
@@ -54,7 +56,8 @@ export class HomeComponent implements OnInit {
           isSelected: false,
           timePublish: ""
         }));
-      });
+      })
+    );
   }
   setTimePublish(page, time) {
     const timePublish = new Date(time).getTime() / 1000;
@@ -74,27 +77,7 @@ export class HomeComponent implements OnInit {
       page.isSelected = !this.allSelected;
     });
   }
-  // async upload(image) {
-  //   const random = Math.floor(Math.random() * 100000);
-  //   const res = await this._storage.upload(
-  //     "postmypage/" + new Date().getTime() + random,
-  //     image
-  //   );
-  //   const { fullPath } = res.metadata;
-  //   const xxxxx = await this._db
-  //     .list("postmypage/imageuploaded")
-  //     .push(fullPath);
-  //   this.arrImageOnStorage.push({
-  //     key: xxxxx.key,
-  //     path: fullPath
-  //   });
-  //   this.arrImages.push(res.downloadURL);
-  // }
-  // uploadImages(images) {
-  //   for (let image of images) {
-  //     this.upload(image);
-  //   }
-  // }
+
 
   uploadFile = file => {
     if (!file) return Promise.resolve(null);
@@ -177,28 +160,34 @@ export class HomeComponent implements OnInit {
           title: formvalue.titleVideo,
           description: content
         };
-        return this._postcontentservice
+        return this._subscription.add(
+          this._postcontentservice
           .postVideo(this.arrDayTime[access_token], contentVideo, access_token)
           .subscribe(res => {
             this.renderResult(res, page, form);
-          });
+          })
+        );
       }
       // post image
       if (this.arrImages.length) {
         return this._postcontentservice
           .postImages(timePublish, content, this.arrImages, access_token)
           .then(res =>
-            res.subscribe(postImageUploaded => {
-              this.renderResult(postImageUploaded, page, form);
-            })
+            this._subscription.add(
+              res.subscribe(postImageUploaded => {
+                this.renderResult(postImageUploaded, page, form);
+              })
+            )
           );
       }
       // post status
-      this._postcontentservice
+      this._subscription.add(
+        this._postcontentservice
         .postStatus(timePublish, content, access_token)
         .subscribe(res => {
           this.renderResult(res, page, form);
-        });
+        })
+      );
     });
   }
 }

@@ -3,12 +3,13 @@ import { NewcommentService } from "../service/newcomment.service";
 import { DashboardService } from "../service/dashboard.service";
 import { LoadingService } from "@swimlane/ngx-ui";
 import * as moment from 'moment'
+import { BaseComponent } from "../base.component";
 @Component({
   selector: "app-newcomment",
   templateUrl: "./newcomment.component.html",
   styleUrls: ["./newcomment.component.css"]
 })
-export class NewcommentComponent implements OnInit {
+export class NewcommentComponent extends BaseComponent implements OnInit {
   page;
   arrComments = [];
   arrPages = [];
@@ -21,30 +22,37 @@ export class NewcommentComponent implements OnInit {
     private _newcommentservice: NewcommentService,
     private _dashboardservice: DashboardService,
     private loadingService: LoadingService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit() {
     this.loadingService.start();
-    this._dashboardservice.getMyPages().subscribe(res => {
-      this.arrPages = res;
-      this.arrUIDadmin = this.arrPages.map(page => page.id);
-      this.getNewCommentOfAllPages();
-      this.loadingService.complete();
-    });
+    this._subscription.add(
+      this._dashboardservice.getMyPages().subscribe(res => {
+        this.arrPages = res;
+        this.arrUIDadmin = this.arrPages.map(page => page.id);
+        this.getNewCommentOfAllPages();
+        this.loadingService.complete();
+      })
+    );
   }
   onClickCmt(comment) {
     if (!comment) return;
     this.loadingService.start();
-    this._newcommentservice.getSubComment(
-      comment.comment.id,
-      comment.access_token,
-      // dataSubComment => {
-      //   comment.subCmt = dataSubComment;
-      // }
-    ).subscribe(res=>{
-      console.log(res.json())
-    })
-    this._newcommentservice
+    this._subscription.add(
+      this._newcommentservice.getSubComment(
+        comment.comment.id,
+        comment.access_token,
+        // dataSubComment => {
+        //   comment.subCmt = dataSubComment;
+        // }
+      ).subscribe(res=>{
+        console.log(res.json())
+      })
+    )
+    this._subscription.add(
+      this._newcommentservice
       .getPostInfo(
         comment.id,
         comment.access_token
@@ -53,7 +61,8 @@ export class NewcommentComponent implements OnInit {
         comment.post = infopost;
         this.commentInfo = comment;
         this.loadingService.complete();
-      });
+      })
+    )
   }
   removeCommentByAdmin() {
     this.arrComments = this.arrComments.filter(comment => {
