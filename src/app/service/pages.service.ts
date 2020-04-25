@@ -22,26 +22,6 @@ export class PagesService {
         return "";
       });
   }
-  // public async getAllPage(access_token, callback) {
-  //   console.log("get all page", access_token);
-  //   const res = await this.getPages(access_token);
-  //   console.log("res :", res);
-  //   this._http
-  //     .get("https://postpage.herokuapp.com/?access_token=" + access_token)
-  //     .subscribe(res => {
-  //       console.log("res", res);
-  //       let new_access_token = JSON.parse(res.json()).access_token;
-  //       new_access_token
-  //         ? (new_access_token = new_access_token)
-  //         : (new_access_token = access_token);
-  //       let query =
-  //         "https://graph.facebook.com/me/accounts?limit=1000&access_token=" +
-  //         new_access_token;
-  //       this._http.get(query).subscribe(res => {
-  //         callback(res.json().data);
-  //       });
-  //     });
-  // }
 
   // Return all page
   public getAllPages(access_token) {

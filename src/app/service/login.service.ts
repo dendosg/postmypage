@@ -11,6 +11,10 @@ export class LoginService {
     return localStorage.getItem('token')
   }
 
+  removeLocalToken() {
+    localStorage.removeItem('token')
+  }
+
   authenticate(token, password, callback) {
     if (!token || !password) return
     this._db.list('postmypage').valueChanges().subscribe(res => {
