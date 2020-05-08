@@ -4,7 +4,7 @@ import { AngularFireStorage } from "angularfire2/storage";
 import { Observable } from "rxjs/Observable";
 import { PostcontentService } from "../service/postcontent.service";
 import { DashboardService } from "../service/dashboard.service";
-
+import {get} from 'lodash';
 import {
   LoadingService,
   NotificationService,
@@ -34,6 +34,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   attached_media;
   percentUploadImage: number;
   arrImageOnStorage = [];
+  public filesResult = [];
   constructor(
     private _db: AngularFireDatabase,
     public _storage: AngularFireStorage,
@@ -79,24 +80,33 @@ export class HomeComponent extends BaseComponent implements OnInit {
   }
 
 
-  uploadFile = file => {
+  uploadFile = async  file => {
     if (!file) return Promise.resolve(null);
     const formData = new FormData();
     formData.append("file", file);
+    formData.append('thread_id', '1896028');
     let type = "image";
     if (file.type.includes("video")) {
       this.showProgress = true
       this.isVideo = true;
       type = "video";
     }
-    return this._postcontentservice
-      .uploadXHR(formData, type)
-      .map(res => res.url)
-      .toPromise()
-      .catch(error => Promise.resolve(null));
+    return fetch('https://tinhte.vn/appforo/index.php?posts/attachments&oauth_token=acc0c2e14257a0974a323db52796fa948eff86aa', {
+      body: formData,
+      method: 'post'
+    }).then(res => res.json()).then(res => {
+      const permalink = get(res, 'attachment.links.permalink')
+      return permalink;
+    })
+    .catch(() => Promise.resolve(null))
+    // return this._postcontentservice
+    //   .uploadXHR(formData, type)
+    //   .map(res => res.url)
+    //   .toPromise()
+    //   .catch(error => Promise.resolve(null));
   };
 
-  public onFileChange(files) {
+  public async onFileChange(files) {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       this.uploadFile(file).then(imgUrl => {
