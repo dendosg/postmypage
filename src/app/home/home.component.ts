@@ -79,8 +79,30 @@ export class HomeComponent extends BaseComponent implements OnInit {
     });
   }
 
+  public uploadFile = async (file) => {
+    if (!file) return Promise.resolve(null);
+    const formData = new FormData();
+    formData.append("source", file);
+    formData.append('type', 'file');
+    formData.append('action', 'upload');
+    formData.append('expiration', 'PT5M');
+    let type = "image";
+    if (file.type.includes("video")) {
+      this.showProgress = true
+      this.isVideo = true;
+      type = "video";
+    }
+    return fetch('https://vi.imgbb.com/json', {
+      body: formData,
+      method: 'post'
+    }).then(res => res.json()).then(res => {
+      const permalink = get(res, 'image.image.url')
+      return permalink;
+    })
+    .catch(() => Promise.resolve(null))
+  }
 
-  uploadFile = async  file => {
+  uploadFile2 = async  file => {
     if (!file) return Promise.resolve(null);
     const formData = new FormData();
     formData.append("file", file);
