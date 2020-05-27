@@ -64,7 +64,10 @@
                 <strong class="color-green" [hidden]="allSelected">Select All Pages</strong>
               </ngx-toggle>
 
-              <div class="row page" *ngFor="let page of arrPages" [ngClass]="{'selected-page':page.isSelected}">
+              <div class="input-group mb-3">
+                <input type="text" [(ngModel)]="filterKeyword" [ngModelOptions]="{standalone: true}" class="form-control" placeholder="Enter keyword" aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+              <div class="row page" *ngFor="let page of arrPages | myfilter:filterKeyword" [ngClass]="{'selected-page':page.isSelected}">
                 <div class="col-2">
                   <!-- <ngx-checkbox [ngModel]="true" [name]="page.isSelected" (click)="page.isSelected = !page.isSelected" >
                   </ngx-checkbox> -->

@@ -26,6 +26,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   arrPages = [];
   choosePage = false;
   showProgress = false;
+  public filterKeyword: string;
   arrDayTime = [];
   arrImages = [];
   arrPosted = [];
