@@ -44,7 +44,7 @@ import { LoadingimgComponent } from "./home/loadingimg/loadingimg.component";
 import { Ng2ImgurUploaderModule } from "ng2-imgur-uploader";
 import { DlDateTimePickerDateModule } from "angular-bootstrap-datetimepicker";
 import { TimeService } from "./service/time.service";
-import { MyFilterPipe } from "./home/filter.pipe";
+import { FilterByPipe } from "./home/filter.pipe";
 
 @NgModule({
   declarations: [
@@ -63,7 +63,7 @@ import { MyFilterPipe } from "./home/filter.pipe";
     RepcmtComponent,
     SubcmtComponent,
     LoadingimgComponent,
-    MyFilterPipe
+    FilterByPipe
   ],
   imports: [
     BrowserModule,

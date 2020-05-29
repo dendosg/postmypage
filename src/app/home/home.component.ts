@@ -21,7 +21,7 @@ const localToken = localStorage.getItem("token");
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"]
 })
-export class HomeComponent extends BaseComponent implements OnInit, AfterViewChecked {
+export class HomeComponent extends BaseComponent implements OnInit {
   allSelected;
   content;
   arrPages = [];
@@ -67,11 +67,11 @@ export class HomeComponent extends BaseComponent implements OnInit, AfterViewChe
   public get selectedPages() {
     return filter(this.arrPages, 'isSelected');
   }
-  ngAfterViewChecked() {
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-  }
+  // ngAfterViewChecked() {
+  //   $(function () {
+  //     $('[data-toggle="tooltip"]').tooltip()
+  //   })
+  // }
 
   setTimePublish(page, time) {
     const timePublish = new Date(time).getTime() / 1000;
