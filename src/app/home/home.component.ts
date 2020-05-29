@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, AfterViewChecked } from "@angular/core";
 import { AngularFireDatabase } from "angularfire2/database";
 import { AngularFireStorage } from "angularfire2/storage";
 import { Observable } from "rxjs/Observable";
@@ -12,6 +12,7 @@ import {
 } from "@swimlane/ngx-ui";
 import { TimeService } from "../service/time.service";
 import { BaseComponent } from "../base.component";
+declare var $: any;
 
 const localToken = localStorage.getItem("token");
 
@@ -20,7 +21,7 @@ const localToken = localStorage.getItem("token");
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"]
 })
-export class HomeComponent extends BaseComponent implements OnInit {
+export class HomeComponent extends BaseComponent implements OnInit, AfterViewChecked {
   allSelected;
   content;
   arrPages = [];
@@ -53,6 +54,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
       .list("postmypage/users/" + localToken + "/pages")
       .valueChanges()
       .subscribe(arrPages => {
+        if (!arrPages) return;
         this.arrPages = arrPages.map(page => ({
           ...page,
           isSelected: false,
@@ -61,6 +63,13 @@ export class HomeComponent extends BaseComponent implements OnInit {
       })
     );
   }
+
+  ngAfterViewChecked() {
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  }
+
   setTimePublish(page, time) {
     const timePublish = new Date(time).getTime() / 1000;
     page.timeFormat = time;
@@ -68,16 +77,17 @@ export class HomeComponent extends BaseComponent implements OnInit {
   }
   setTimePublishAllPage(time) {
     const timePublish = new Date(time).getTime() / 1000;
-    this.arrPages.map(page => {
-      page.timePublish = timePublish;
-      page.timeFormat = time;
-    });
+    this.arrPages = this.arrPages.map(page => ({
+      ...page,
+      timePublish,
+      timeFormat: time
+    }))
   }
-  dateChanged(e) {}
   selectAllPage() {
-    this.arrPages.map(page => {
-      page.isSelected = !this.allSelected;
-    });
+    this.arrPages = this.arrPages.map(page =>({
+      ...page,
+      isSelected: !this.allSelected
+    }))
   }
 
   public uploadFile = async (file) => {
@@ -103,31 +113,40 @@ export class HomeComponent extends BaseComponent implements OnInit {
     .catch(() => Promise.resolve(null))
   }
 
-  uploadFile2 = async  file => {
-    if (!file) return Promise.resolve(null);
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append('thread_id', '1896028');
-    let type = "image";
-    if (file.type.includes("video")) {
-      this.showProgress = true
-      this.isVideo = true;
-      type = "video";
-    }
-    return fetch('https://tinhte.vn/appforo/index.php?posts/attachments&oauth_token=acc0c2e14257a0974a323db52796fa948eff86aa', {
-      body: formData,
-      method: 'post'
-    }).then(res => res.json()).then(res => {
-      const permalink = get(res, 'attachment.links.permalink')
-      return permalink;
+  public selectPage(page) {
+    this.arrPages = this.arrPages.map(item => {
+      if(item.id !== page.id) return item;
+      return {
+        ...item,
+        isSelected: !item.isSelected
+      }
     })
-    .catch(() => Promise.resolve(null))
+  }
+  // uploadFile2 = async  file => {
+    // if (!file) return Promise.resolve(null);
+    // const formData = new FormData();
+    // formData.append("file", file);
+    // formData.append('thread_id', '1896028');
+    // let type = "image";
+    // if (file.type.includes("video")) {
+    //   this.showProgress = true
+    //   this.isVideo = true;
+    //   type = "video";
+    // }
+    // return fetch('https://tinhte.vn/appforo/index.php?posts/attachments&oauth_token=acc0c2e14257a0974a323db52796fa948eff86aa', {
+    //   body: formData,
+    //   method: 'post'
+    // }).then(res => res.json()).then(res => {
+    //   const permalink = get(res, 'attachment.links.permalink')
+    //   return permalink;
+    // })
+    // .catch(() => Promise.resolve(null))
     // return this._postcontentservice
     //   .uploadXHR(formData, type)
     //   .map(res => res.url)
     //   .toPromise()
     //   .catch(error => Promise.resolve(null));
-  };
+  // };
 
   public async onFileChange(files) {
     for (let i = 0; i < files.length; i++) {

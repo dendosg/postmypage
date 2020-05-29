@@ -11,6 +11,6 @@ export class MyFilterPipe implements PipeTransform {
         }
         // filter items array, items which match and return true will be
         // kept, false will be filtered out
-        return items.filter(item => item.name.toLowerCase().indexOf(keyword) !== -1);
+        return items.filter(item => item.name.toLowerCase().includes(keyword.toLowerCase()));
     }
 }

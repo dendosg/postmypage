@@ -71,7 +71,9 @@
                 <div class="col-2">
                   <!-- <ngx-checkbox [ngModel]="true" [name]="page.isSelected" (click)="page.isSelected = !page.isSelected" >
                   </ngx-checkbox> -->
-                  <ngx-toggle name="toggle1" [(ngModel)]="page.isSelected"></ngx-toggle>
+                  <div (click)="selectPage(page)" data-toggle="tooltip" data-placement="top" title="Click để chọn đăng lên {{page.name}}">
+                    <i class="fas fa-plus-square" style="font-size:20px"></i>
+                  </div>
                 </div>
                 <div class="col-4">
                   <img class="avatar" src="https://graph.facebook.com/{{page.id}}/picture?width=50&height=50" alt=""> </div>
