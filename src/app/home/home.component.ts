@@ -4,7 +4,7 @@ import { AngularFireStorage } from "angularfire2/storage";
 import { Observable } from "rxjs/Observable";
 import { PostcontentService } from "../service/postcontent.service";
 import { DashboardService } from "../service/dashboard.service";
-import {get} from 'lodash';
+import { get, filter } from 'lodash';
 import {
   LoadingService,
   NotificationService,
@@ -64,6 +64,9 @@ export class HomeComponent extends BaseComponent implements OnInit, AfterViewChe
     );
   }
 
+  public get selectedPages() {
+    return filter(this.arrPages, 'isSelected');
+  }
   ngAfterViewChecked() {
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
