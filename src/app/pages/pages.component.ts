@@ -30,8 +30,9 @@ export class PagesComponent implements OnInit {
     const { access_token } = form.value
     if (!access_token) return alert('Hãy nhập mã code theo hướng dẫn trước khi submit')
     this.isAdd = true
-    const extendEdToken = await this._pagesService.getExtendedToken(access_token)
-    const allPages = await this._pagesService.getAllPages(extendEdToken);
+    // const extendEdToken = await this._pagesService.getExtendedToken(access_token)
+    const allPages = await this._pagesService.getAllPages(access_token);
+    // return console.log('allPages', allPages)
     await this._db.list('postmypage/users/' + localToken).set('pages', allPages)
     const res = await this._db.list('postmypage/users/' + localToken).set('access_token', access_token)
     this._router.navigate(['/']);
