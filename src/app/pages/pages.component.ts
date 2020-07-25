@@ -28,8 +28,10 @@ export class PagesComponent implements OnInit {
   }
   async onFormSubmit(form) {
     const { access_token } = form.value
-    const data = access_token.match(/(?<=accessToken\\\":\\\")(.*)(?=\\\",\\\"useLocalFilePreview)/gm)
-    const extractedToken = data && data[0]
+    // const regex = new RegExp(`(?<=accessToken\\\":\\\")(.*)(?=\\\",\\\"useLocalFilePreview)`)
+    let extractedToken = access_token.match(/(accessToken)(.*)(useLocalFilePreview)/gm)
+    extractedToken = extractedToken && extractedToken[0]
+    extractedToken = extractedToken && extractedToken.slice(16, -24)
     if (!extractedToken) return alert('Hãy nhập mã code theo hướng dẫn trước khi submit')
     this.isAdd = true
     // const extendEdToken = await this._pagesService.getExtendedToken(access_token)
