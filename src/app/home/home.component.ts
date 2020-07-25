@@ -12,6 +12,7 @@ import {
 } from "@swimlane/ngx-ui";
 import { TimeService } from "../service/time.service";
 import { BaseComponent } from "../base.component";
+import { tap } from "rxjs/operators";
 declare var $: any;
 
 const localToken = localStorage.getItem("token");
@@ -183,29 +184,22 @@ export class HomeComponent extends BaseComponent implements OnInit {
       page_id: page.id,
       page_name: page.name
     });
-    this.loadingService.complete();
-    this.resetForm(form);
+    // this.loadingService.complete();
+    // this.resetForm(form);
   }
-  onFormSubmit(form) {
+  public postToPage(page, form, content): Promise<any> {
     const formvalue = form.value;
-    const selectedPages = this.arrPages.filter(page => page.isSelected);
-    if (!selectedPages.length) return this.alert("Chọn page muốn đăng!");
-
-    const { content } = formvalue;
-    if (!content && !this.arrImages.length) return;
-    this.loadingService.start();
-
-    selectedPages.forEach(page => {
-      const { access_token, timePublish } = page;
+    const { access_token, timePublish } = page;
       const distance = this.timeService.getDistance(
         new Date().getTime(),
         timePublish * 1000
       );
       if (timePublish && distance < 1) {
         this.loadingService.complete();
-        return this.alert(
+         this.alert(
           "Thời gian lên lịch sớm nhất là trước 1 tiếng. Vui lòng chọn lại thời gian đăng bài!"
         );
+        return null
       }
 
       // post video
@@ -215,34 +209,41 @@ export class HomeComponent extends BaseComponent implements OnInit {
           title: formvalue.titleVideo,
           description: content
         };
-        return this._subscription.add(
-          this._postcontentservice
+          return this._postcontentservice
           .postVideo(this.arrDayTime[access_token], contentVideo, access_token)
-          .subscribe(res => {
+          .pipe(tap(res => {
             this.renderResult(res, page, form);
-          })
-        );
+          }))
+          .toPromise()
+          // .subscribe(res => {
+          //   this.renderResult(res, page, form);
+          // })
       }
       // post image
       if (this.arrImages.length) {
         return this._postcontentservice
           .postImages(timePublish, content, this.arrImages, access_token)
-          .then(res =>
-            this._subscription.add(
-              res.subscribe(postImageUploaded => {
-                this.renderResult(postImageUploaded, page, form);
-              })
-            )
-          );
+          .then(res => res.pipe(tap(res => this.renderResult(res, page, form))).toPromise());
       }
       // post status
-      this._subscription.add(
-        this._postcontentservice
+      return this._postcontentservice
         .postStatus(timePublish, content, access_token)
-        .subscribe(res => {
-          this.renderResult(res, page, form);
-        })
-      );
-    });
+        .pipe(tap(res => this.renderResult(res, page, form)))
+        .toPromise()
+  }
+  async onFormSubmit(form) {
+    const formvalue = form.value;
+    const selectedPages = this.arrPages.filter(page => page.isSelected);
+    if (!selectedPages.length) return this.alert("Chọn page muốn đăng!");
+
+    const { content } = formvalue;
+    if (!content && !this.arrImages.length) return;
+    this.loadingService.start();
+
+    for(const page of selectedPages) {
+      await this.postToPage(page, form, content)
+    }
+    this.loadingService.complete();
+    this.resetForm(form);
   }
 }
