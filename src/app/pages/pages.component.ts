@@ -24,7 +24,7 @@ export class PagesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this._http.get('https://postpage.herokuapp.com/')
+    this._http.get('https://postpage.herokuapp.com/').subscribe()
   }
   async onFormSubmit(form) {
     const { access_token } = form.value
