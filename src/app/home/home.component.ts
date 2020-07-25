@@ -51,11 +51,13 @@ export class HomeComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadingService.start()
     this._subscription.add(
       this._db
       .list("postmypage/users/" + localToken + "/pages")
       .valueChanges()
       .subscribe(arrPages => {
+        this.loadingService.complete()
         if (!arrPages) return;
         this.arrPages = arrPages.map(page => ({
           ...page,
