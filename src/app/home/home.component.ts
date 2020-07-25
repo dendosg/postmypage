@@ -43,6 +43,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     public _storage: AngularFireStorage,
     private _postcontentservice: PostcontentService,
     private loadingService: LoadingService,
+    private notificationService: NotificationService,
     public timeService: TimeService,
     public alertService: AlertService
   ) {
@@ -184,6 +185,11 @@ export class HomeComponent extends BaseComponent implements OnInit {
       page_id: page.id,
       page_name: page.name
     });
+    return this.notificationService.create({
+      body: page.timePublish ? 'Lên lịch thành công!' : 'Đăng bài thành công!',
+      title: page.name,
+      styleType: 'success'
+    })
     // this.loadingService.complete();
     // this.resetForm(form);
   }
