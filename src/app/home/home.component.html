@@ -111,7 +111,7 @@
     <!-- Hiển thị img -->
     <div class="showimage d-flex flex-wrap">
       <div class="imageVideo" *ngFor="let img of arrImages">
-        <img class="delete" width="50" src="https://img.icons8.com/cotton/2x/cancel.png" (click)="removeImage(img)">
+        <img class="delete" width="50" src="https://cdn1.iconfinder.com/data/icons/toolbar-signs/512/cancel-512.png" (click)="removeImage(img)">
         <img [src]="img" width="200" height="200" class="img-thumbnail" *ngIf="!isVideo">
         <video width="320" height="240" *ngIf="isVideo">
           <source [src]="img" type="video/mp4">

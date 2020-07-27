@@ -120,6 +120,29 @@ export class HomeComponent extends BaseComponent implements OnInit {
     .catch(() => Promise.resolve(null))
   }
 
+  public uploadFileV2 = async (file) => {
+    if (!file) return Promise.resolve(null);
+    const formData = new FormData();
+    formData.append("file", file);
+    let type = "image";
+    if (file.type.includes("video")) {
+      this.showProgress = true
+      this.isVideo = true;
+      type = "video";
+    }
+    return fetch(`http://164.132.108.9:5002/v1/files/${type}`, {
+      body: formData,
+      headers: {
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJDTkZSS0t3SHFLIiwicmVmcmVzaFRva2VuSWQiOiJzTDVaRGlBdHo2IiwidHlwZSI6IkFDQ0VTU19UT0tFTiIsImlhdCI6MTU5NTIyNjgzMywiZXhwIjoxNTk3ODE4ODMzfQ._utxsW0cHgaUz-aerIArxTIOqIIwytqEO5atmZxV3FM',
+      },
+      method: 'post'
+    }).then(res => res.json()).then(res => {
+      const permalink = get(res, 'url')
+      return permalink;
+    })
+    .catch(() => Promise.resolve(null))
+  }
+
   public selectPage(page) {
     this.arrPages = this.arrPages.map(item => {
       if(item.id !== page.id) return item;
@@ -158,7 +181,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   public async onFileChange(files) {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      this.uploadFile(file).then(imgUrl => {
+      this.uploadFileV2(file).then(imgUrl => {
         if (this.isVideo) this.showProgress = false;
         this.arrImages.push(imgUrl)});
     }
