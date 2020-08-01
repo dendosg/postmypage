@@ -130,7 +130,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
       this.isVideo = true;
       type = "video";
     }
-    return fetch(`http://164.132.108.9:5002/v1/files/${type}`, {
+    return fetch(`http://35.181.0.111:5002/v1/files/${type}`, {
       body: formData,
       headers: {
         Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJDTkZSS0t3SHFLIiwicmVmcmVzaFRva2VuSWQiOiJzTDVaRGlBdHo2IiwidHlwZSI6IkFDQ0VTU19UT0tFTiIsImlhdCI6MTU5NTIyNjgzMywiZXhwIjoxNTk3ODE4ODMzfQ._utxsW0cHgaUz-aerIArxTIOqIIwytqEO5atmZxV3FM',
