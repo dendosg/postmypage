@@ -133,7 +133,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     return fetch(`http://35.181.0.111:5002/v1/files/${type}`, {
       body: formData,
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJDTkZSS0t3SHFLIiwicmVmcmVzaFRva2VuSWQiOiJzTDVaRGlBdHo2IiwidHlwZSI6IkFDQ0VTU19UT0tFTiIsImlhdCI6MTU5NTIyNjgzMywiZXhwIjoxNTk3ODE4ODMzfQ._utxsW0cHgaUz-aerIArxTIOqIIwytqEO5atmZxV3FM',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJWSXhBMkNGeWZFIiwicmVmcmVzaFRva2VuSWQiOiI1QkpKZlp0Z1FTIiwidHlwZSI6IkFDQ0VTU19UT0tFTiIsImlhdCI6MTU5NzQxNjIyOSwiZXhwIjoxNjAwMDA4MjI5fQ.s9NF_td-EvKOBerS7oF6zOOkdD3R3MEwGMQLo3pW3Io',
       },
       method: 'post'
     }).then(res => res.json()).then(res => {
