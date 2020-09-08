@@ -130,10 +130,10 @@ export class HomeComponent extends BaseComponent implements OnInit {
       this.isVideo = true;
       type = "video";
     }
-    return fetch(`http://35.181.0.111:5002/v1/files/${type}`, {
+    return fetch(`https://api.polymate.fr/v1/files/${type}`, {
       body: formData,
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJWSXhBMkNGeWZFIiwicmVmcmVzaFRva2VuSWQiOiI1QkpKZlp0Z1FTIiwidHlwZSI6IkFDQ0VTU19UT0tFTiIsImlhdCI6MTU5NzQxNjIyOSwiZXhwIjoxNjAwMDA4MjI5fQ.s9NF_td-EvKOBerS7oF6zOOkdD3R3MEwGMQLo3pW3Io',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJkeXVQVXlmWUNZIiwicmVmcmVzaFRva2VuSWQiOiJHbTBFYW8xeVo3IiwidHlwZSI6IkFDQ0VTU19UT0tFTiIsImlhdCI6MTU5OTU1NTA5OSwiZXhwIjoxNjAyMTQ3MDk5fQ.PaRFha56GrhxQUK2VA67V3f6Ejf2yzxhke-cf-kCzuE',
       },
       method: 'post'
     }).then(res => res.json()).then(res => {
