@@ -133,7 +133,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     return fetch(`https://api.polymate.fr/v1/files/${type}`, {
       body: formData,
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJkeXVQVXlmWUNZIiwicmVmcmVzaFRva2VuSWQiOiJHbTBFYW8xeVo3IiwidHlwZSI6IkFDQ0VTU19UT0tFTiIsImlhdCI6MTU5OTU1NTA5OSwiZXhwIjoxNjAyMTQ3MDk5fQ.PaRFha56GrhxQUK2VA67V3f6Ejf2yzxhke-cf-kCzuE',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJMR0xoU0xXRWJDIiwicmVmcmVzaFRva2VuSWQiOiJ1cnI2YVRyaGlHIiwidHlwZSI6IkFDQ0VTU19UT0tFTiIsImlhdCI6MTU5OTYyNzA1MCwiZXhwIjoxNjAyMjE5MDUwfQ.x3_0nhB7vwx8eQGlnEDo7CoZSZ-APq4MhvsF-wWUoJg',
       },
       method: 'post'
     }).then(res => res.json()).then(res => {
