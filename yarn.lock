@@ -4551,6 +4551,11 @@ lodash@^4.0.0, lodash@^4.11.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.2, 
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
 
+lodash@^4.17.15:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
+
 log4js@^2.5.3:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/log4js/-/log4js-2.11.0.tgz#bf3902eff65c6923d9ce9cfbd2db54160e34005a"
@@ -7894,17 +7899,17 @@ webpack-merge@^4.1.0:
     lodash "^4.17.5"
 
 webpack-sources@^1.0.0, webpack-sources@^1.0.1, webpack-sources@^1.1.0, webpack-sources@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.3.0.tgz#2a28dcb9f1f45fe960d8f1493252b5ee6530fa85"
-  integrity sha512-OiVgSrbGu7NEnEvQJJgdSFPl2qWKkWq5lHMhgiToIiN9w34EBnjYzSYs+VbL5KoYiLNtFFa7BZIKxRED3I32pA==
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.4.3.tgz#eedd8ec0b928fbf1cbfe994e22d2d890f330a933"
+  integrity sha512-lgTS3Xhv1lCOKo7SA5TjKXMjpSM4sBjNV5+q2bqesbSPs5FjGmU6jjtBSkX9b4qW87vDIsCIlUPOEhbZrMdjeQ==
   dependencies:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
 webpack-subresource-integrity@^1.0.1:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/webpack-subresource-integrity/-/webpack-subresource-integrity-1.2.0.tgz#4cc8bdc2511482107d1d044bef1e5c4aa5058d84"
-  integrity sha512-bdMR4DRbINUFt+QhNfBFHURnCzT8mtHjXiclQWX/aXBpu2pM4nOb2qViyt84ZSFrVKEXkAbmz7mSoZQH/08xFg==
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/webpack-subresource-integrity/-/webpack-subresource-integrity-1.5.1.tgz#6f44ea99987266b70c4ec42ac51064d33e982277"
+  integrity sha512-uekbQ93PZ9e7BFB8Hl9cFIVYQyQqiXp2ExKk9Zv+qZfH/zHXHrCFAfw1VW0+NqWbTWrs/HnuDrto3+tiPXh//Q==
   dependencies:
     webpack-sources "^1.3.0"
 
