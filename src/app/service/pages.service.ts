@@ -6,7 +6,7 @@ import { get } from "lodash";
 export class PagesService {
   arrPages = [];
   public baseUrl =
-    "https://graph.facebook.com/me/accounts?access_token=";
+    "https://cors-anywhere.herokuapp.com/https://graph.facebook.com/me/accounts?access_token=";
   constructor(private _http: Http) {}
   getExtendedToken(access_token: string) {
     const ngaoDuKyClientId = "249127368869539";
