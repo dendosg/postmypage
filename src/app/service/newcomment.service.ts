@@ -32,7 +32,7 @@ export class NewcommentService {
         }
       });
       callback(arrComments);
-    });
+    }, error => callback([]));
   }
   getPostInfo(idPost, access_token) {
     let query =

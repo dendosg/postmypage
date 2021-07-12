@@ -10,12 +10,12 @@ import { NewcommentComponent } from './newcomment/newcomment.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  // { path: 'dashboard', component: DashboardComponent },
   { path: 'pages', component: PagesComponent },
   { path: 'detail/:uid', component: DetailpageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'guide', component: GuideComponent },
-  { path: 'newcomment', component: NewcommentComponent },
+  // { path: 'newcomment', component: NewcommentComponent },
   { path: '**', component: HomeComponent }
 ];
 
