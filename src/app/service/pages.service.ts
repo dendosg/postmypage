@@ -60,7 +60,6 @@ export class PagesService {
         const pages = get(res, "data");
         callback(pages);
         const newEndPoint = get(res, "paging.next");
-        console.log('Sleep')
         this.notificationService.create({
           title: 'Import was successful',
           body: `${pages.length} pages`,
@@ -68,8 +67,7 @@ export class PagesService {
           timeout: 3000,
           rateLimit: false
         })
-        await this.sleep(1000)
-        console.log('Continue', newEndPoint)
+        await this.sleep(2000)
         if (newEndPoint) return this.getPages(newEndPoint, callback);
         callback([]);
       });
