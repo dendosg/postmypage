@@ -1,8 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Headers, Http} from "@angular/http";
 import {get} from "lodash";
-import {HttpHeaders} from "@angular/common/http";
-import {RequestOptionsArgs} from "@angular/http/src/interfaces";
+import {NotificationService} from "@swimlane/ngx-ui";
 
 @Injectable()
 export class PagesService {
@@ -10,7 +9,7 @@ export class PagesService {
   public baseUrl =
     "https://graph.facebook.com/me/accounts?limit=50&access_token=";
 
-  constructor(private _http: Http) {
+  constructor(private _http: Http, private notificationService: NotificationService) {
   }
 
   getExtendedToken(access_token: string) {
@@ -62,6 +61,13 @@ export class PagesService {
         callback(pages);
         const newEndPoint = get(res, "paging.next");
         console.log('Sleep')
+        this.notificationService.create({
+          title: 'Import was successful',
+          body: `${pages.length} pages`,
+          styleType: 'success',
+          timeout: 3000,
+          rateLimit: false
+        })
         await this.sleep(1000)
         console.log('Continue', newEndPoint)
         if (newEndPoint) return this.getPages(newEndPoint, callback);

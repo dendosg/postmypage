@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { Observable } from 'rxjs/Observable';
-import { async } from '@firebase/util';
-import { forEachAsync } from 'forEachAsync';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import {AngularFireDatabase} from 'angularfire2/database';
+import {Observable} from 'rxjs/Observable';
+import {forkJoin} from 'rxjs/observable/forkJoin';
 
 const localToken = localStorage.getItem('token')
+
 @Injectable()
 export class PostcontentService {
-  constructor(private _http: Http, private _db: AngularFireDatabase) { }
+  constructor(private _http: Http, private _db: AngularFireDatabase) {
+  }
 
   public uploadXHR(data: FormData, type: string = 'image'): Observable<any> {
     return Observable.create(observer => {
@@ -17,14 +17,14 @@ export class PostcontentService {
       const xhr = new XMLHttpRequest;
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                observer.next(JSON.parse(xhr.response));
-                observer.complete();
-            } else {
+          if (xhr.status === 200) {
+            observer.next(JSON.parse(xhr.response));
+            observer.complete();
+          } else {
             observer.error(xhr.response);
-            }
+          }
         }
-    };
+      };
       xhr.open("post", `https://api.cloudinary.com/v1_1/gtappdev/${type}/upload`);
       xhr.send(data);
     })
@@ -42,14 +42,15 @@ export class PostcontentService {
     const processUploadImages = arrImages.map(image => this.uploadOneImage(image, access_token))
     return forkJoin(processUploadImages).toPromise()
   }
-  
-  public postStatus(scheduled_publish_time, content, access_token) : Observable<any> {
+
+  public postStatus(scheduled_publish_time, content, access_token): Observable<any> {
     const option = {
       access_token, message: content, scheduled_publish_time, published: !scheduled_publish_time
     }
     const query = 'https://graph.facebook.com/v2.11/me/feed';
-   return this._http.post(query, option)
+    return this._http.post("https://cors-anywhere.herokuapp.com/" + query, option)
   }
+
   public async postImages(scheduled_publish_time, message, arrImages, access_token) {
     let option = {}, query = '';
     if (arrImages.length === 1) {
@@ -70,8 +71,9 @@ export class PostcontentService {
       }
       query = 'https://graph.facebook.com/v2.11/me/feed'
     }
-    return this._http.post(query, option)
+    return this._http.post("https://cors-anywhere.herokuapp.com/" + query, option)
   }
+
   public postVideo(scheduled_publish_time, content, access_token) {
     const option = {
       access_token,
@@ -82,7 +84,7 @@ export class PostcontentService {
       published: !scheduled_publish_time
     }
     const query = 'https://graph.facebook.com/v2.11/me/videos'
-    return this._http.post(query, option)
+    return this._http.post("https://cors-anywhere.herokuapp.com/" + query, option)
   }
 }
 
