@@ -23,7 +23,7 @@ export class DashboardService {
       "fan_count",
       "name"
     ];
-    const query = `https://graph.facebook.com/v2.6/me?fields=${fields.join(',')}&access_token=${access_token}` 
+    const query = `https://cors-anywhere.herokuapp.com/https://graph.facebook.com/v2.6/me?fields=${fields.join(',')}&access_token=${access_token}`
     return this._http.get(query)
   }
 }

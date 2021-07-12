@@ -18,7 +18,7 @@ export class NewcommentService {
     const arrComments = [];
 
     let query =
-      "https://graph.facebook.com/v2.11/me/feed?fields=comments&limit=50&access_token=" +
+      "https://cors-anywhere.herokuapp.com/https://graph.facebook.com/v2.11/me/feed?fields=comments&limit=50&access_token=" +
       access_token;
     this._detailpageservice.getFeedOfPage(query).subscribe(res => {
       const resJson = res.json();
@@ -36,7 +36,7 @@ export class NewcommentService {
   }
   getPostInfo(idPost, access_token) {
     let query =
-      "https://graph.facebook.com/v2.11/" +
+      "https://cors-anywhere.herokuapp.com/https://graph.facebook.com/v2.11/" +
       idPost +
       "?fields=full_picture,message&access_token=" +
       access_token;
@@ -52,7 +52,7 @@ export class NewcommentService {
   }
   postComment(idComment, message, access_token) {
     const option = { access_token, message, attachment_url: "" };
-    const query = `https://graph.facebook.com/v2.11/${idComment}/comments`;
+    const query = `https://cors-anywhere.herokuapp.com/https://graph.facebook.com/v2.11/${idComment}/comments`;
     return this._http.post(query, option);
   }
 }
