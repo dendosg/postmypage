@@ -1,18 +1,12 @@
-import {Component, OnInit, AfterViewChecked} from "@angular/core";
-import {AngularFireDatabase} from "angularfire2/database";
-import {AngularFireStorage} from "angularfire2/storage";
-import {Observable} from "rxjs/Observable";
-import {PostcontentService} from "../service/postcontent.service";
-import {DashboardService} from "../service/dashboard.service";
-import {get, filter} from 'lodash';
-import {
-  LoadingService,
-  NotificationService,
-  AlertService
-} from "@swimlane/ngx-ui";
-import {TimeService} from "../service/time.service";
-import {BaseComponent} from "../base.component";
-import {tap} from "rxjs/operators";
+import { Component, OnInit } from "@angular/core";
+import { AngularFireDatabase } from "angularfire2/database";
+import { AngularFireStorage } from "angularfire2/storage";
+import { PostcontentService } from "../service/postcontent.service";
+import { filter, get } from 'lodash';
+import { AlertService, LoadingService, NotificationService } from "@swimlane/ngx-ui";
+import { TimeService } from "../service/time.service";
+import { BaseComponent } from "../base.component";
+import { tap } from "rxjs/operators";
 
 declare var $: any;
 
@@ -175,32 +169,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
       }
     })
   }
-
-  // uploadFile2 = async  file => {
-  // if (!file) return Promise.resolve(null);
-  // const formData = new FormData();
-  // formData.append("file", file);
-  // formData.append('thread_id', '1896028');
-  // let type = "image";
-  // if (file.type.includes("video")) {
-  //   this.showProgress = true
-  //   this.isVideo = true;
-  //   type = "video";
-  // }
-  // return fetch('https://tinhte.vn/appforo/index.php?posts/attachments&oauth_token=acc0c2e14257a0974a323db52796fa948eff86aa', {
-  //   body: formData,
-  //   method: 'post'
-  // }).then(res => res.json()).then(res => {
-  //   const permalink = get(res, 'attachment.links.permalink')
-  //   return permalink;
-  // })
-  // .catch(() => Promise.resolve(null))
-  // return this._postcontentservice
-  //   .uploadXHR(formData, type)
-  //   .map(res => res.url)
-  //   .toPromise()
-  //   .catch(error => Promise.resolve(null));
-  // };
 
   public async onFileChange(files) {
     for (let i = 0; i < files.length; i++) {

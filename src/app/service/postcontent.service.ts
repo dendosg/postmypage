@@ -48,7 +48,7 @@ export class PostcontentService {
       access_token, message: content, scheduled_publish_time, published: !scheduled_publish_time
     }
     const query = 'https://graph.facebook.com/v2.11/me/feed';
-    return this._http.post("https://cors-anywhere.herokuapp.com/" + query, option)
+    return this._http.post("http://52.221.182.60:3000?url=" + query, option)
   }
 
   public async postImages(scheduled_publish_time, message, arrImages, access_token) {
@@ -71,7 +71,7 @@ export class PostcontentService {
       }
       query = 'https://graph.facebook.com/v2.11/me/feed'
     }
-    return this._http.post("https://cors-anywhere.herokuapp.com/" + query, option)
+    return this._http.post("http://52.221.182.60:3000?url=" + query, option)
   }
 
   public postVideo(scheduled_publish_time, content, access_token) {
@@ -84,7 +84,7 @@ export class PostcontentService {
       published: !scheduled_publish_time
     }
     const query = 'https://graph.facebook.com/v2.11/me/videos'
-    return this._http.post("https://cors-anywhere.herokuapp.com/" + query, option)
+    return this._http.post("http://52.221.182.60:3000?url=" + query, option)
   }
 }
 
