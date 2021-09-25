@@ -31,10 +31,6 @@ export class PostcontentService {
   }
 
   public uploadOneImage(url_image, access_token) {
-    const fd = new FormData
-    fd.append('access_token', access_token)
-    fd.append('published', 'false')
-    fd.append('url', url_image)
     const data = {
       access_token,
       published: false,
