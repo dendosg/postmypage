@@ -35,7 +35,12 @@ export class PostcontentService {
     fd.append('access_token', access_token)
     fd.append('published', 'false')
     fd.append('url', url_image)
-    return this._http.post('http://52.221.182.60:3000?url=https://graph.facebook.com/v2.11/me/photos', fd)
+    const data = {
+      access_token,
+      published: false,
+      url: url_image
+    }
+    return this._http.post('http://52.221.182.60:3000?url=https://graph.facebook.com/v2.11/me/photos', data)
   }
 
   public uploadImages(arrImages, access_token) {
