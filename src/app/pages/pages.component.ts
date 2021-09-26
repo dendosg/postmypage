@@ -36,8 +36,9 @@ export class PagesComponent implements OnInit {
     this.isAdd = true
     // const extendEdToken = await this._pagesService.getExtendedToken(access_token)
     const allPages = await this._pagesService.getAllPages(extractedToken);
+    localStorage.setItem('allPages', JSON.stringify(allPages))
     // return console.log('allPages', allPages)
-    await this._db.list('postmypage/users/' + localToken).set('pages', allPages)
+    // await this._db.list('postmypage/users/' + localToken).set('pages', allPages)
     const res = await this._db.list('postmypage/users/' + localToken).set('access_token', extractedToken)
     this._router.navigate(['/']);
   }
