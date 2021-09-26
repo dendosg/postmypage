@@ -22,7 +22,7 @@
       <button type="submit" #submit class="btn btn-primary btn-block" hidden>Submit</button>
     </form>
   </div>
-  <p *ngIf="isAdd" style="text-align: center" >Loading...</p>
+  <app-loadingimg *ngIf="isAdd" ></app-loadingimg>
   <div class="card-footer text-muted d-flex">
     <button type="submit" class="btn btn-primary btn-block" (click)="submit.click()">Submit</button>
   </div>

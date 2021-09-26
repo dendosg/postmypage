@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PagesService } from '../service/pages.service';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { NotificationService } from '@swimlane/ngx-ui';
+import { LoadingService, NotificationService } from '@swimlane/ngx-ui';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 
@@ -20,13 +20,15 @@ export class PagesComponent implements OnInit {
     private _db: AngularFireDatabase,
     private notificationService: NotificationService,
     private _router: Router,
-    private _http: Http
+    private _http: Http,
+    public loadingService: LoadingService
   ) { }
 
   ngOnInit() {
     this._http.get('https://postpage.herokuapp.com/').subscribe()
   }
   async onFormSubmit(form) {
+    this.loadingService.start()
     const { access_token } = form.value
     // const regex = new RegExp(`(?<=accessToken\\\":\\\")(.*)(?=\\\",\\\"useLocalFilePreview)`)
     let extractedToken = access_token.match(/(accessToken)(.*)(useLocalFilePreview)/gm)
@@ -40,6 +42,7 @@ export class PagesComponent implements OnInit {
     // return console.log('allPages', allPages)
     // await this._db.list('postmypage/users/' + localToken).set('pages', allPages)
     const res = await this._db.list('postmypage/users/' + localToken).set('access_token', extractedToken)
+    this.loadingService.stop()
     this._router.navigate(['/']);
   }
 }
