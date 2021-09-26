@@ -33,6 +33,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   percentUploadImage: number;
   arrImageOnStorage = [];
   public filesResult = [];
+  private polymateToken = '';
 
   constructor(
     private _db: AngularFireDatabase,
@@ -62,6 +63,24 @@ export class HomeComponent extends BaseComponent implements OnInit {
           }));
         })
     );
+    this.loginPolymate()
+  }
+
+  private async loginPolymate() {
+    const res = await fetch("http://35.181.0.111:5002/v1/auth/login", {
+      headers: {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "content-type": "application/json",
+        "sec-gpc": "1"
+      },
+      referrer: "http://35.181.0.111:5002/api/",
+      body: "{\"password\":\"12345678\",\"email\":\"issueanttech@gmail.com\"}",
+      method: "POST",
+      mode: "cors"
+    }).then(res => res.json())
+    const token = get(res, 'token')
+    this.polymateToken = token
   }
 
   public get selectedPages() {
@@ -130,27 +149,10 @@ export class HomeComponent extends BaseComponent implements OnInit {
       type = "video";
     }
 
-
-    const res = await fetch("http://35.181.0.111:5002/v1/auth/login", {
-      headers: {
-        "accept": "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "content-type": "application/json",
-        "sec-gpc": "1"
-      },
-      referrer: "http://35.181.0.111:5002/api/",
-      body: "{\"password\":\"12345678\",\"email\":\"issueanttech@gmail.com\"}",
-      method: "POST",
-      mode: "cors"
-    }).then(res => res.json())
-
-
-    const token = get(res, 'token')
-
     return fetch(`http://35.181.0.111:5002/v1/files/${type}`, {
       body: formData,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${this.polymateToken}`,
       },
       method: 'post'
     }).then(res => res.json()).then(res => {
