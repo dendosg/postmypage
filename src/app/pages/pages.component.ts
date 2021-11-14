@@ -28,21 +28,16 @@ export class PagesComponent implements OnInit {
     this._http.get('https://postpage.herokuapp.com/').subscribe()
   }
   async onFormSubmit(form) {
-    this.loadingService.start()
     const { access_token } = form.value
-    // const regex = new RegExp(`(?<=accessToken\\\":\\\")(.*)(?=\\\",\\\"useLocalFilePreview)`)
-    let extractedToken = access_token.match(/(accessToken)(.*)(useLocalFilePreview)/gm)
+    let extractedToken = access_token.match(/accessToken=(.*)\";/gm)
     extractedToken = extractedToken && extractedToken[0]
-    extractedToken = extractedToken && extractedToken.slice(16, -24)
+    extractedToken = extractedToken && extractedToken.slice(13, -2)
     if (!extractedToken) return alert('Hãy nhập mã code theo hướng dẫn trước khi submit')
     this.isAdd = true
-    // const extendEdToken = await this._pagesService.getExtendedToken(access_token)
     const allPages = await this._pagesService.getAllPages(extractedToken);
     localStorage.setItem('allPages', JSON.stringify(allPages))
-    // return console.log('allPages', allPages)
-    // await this._db.list('postmypage/users/' + localToken).set('pages', allPages)
-    const res = await this._db.list('postmypage/users/' + localToken).set('access_token', extractedToken)
-    this.loadingService.stop()
+    await this._db.list('postmypage/users/' + localToken).set('access_token', extractedToken)
+    this.isAdd = false
     this._router.navigate(['/']);
   }
 }
