@@ -49,7 +49,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     const arrPages = JSON.parse(localStorage.getItem('allPages'))
-    this.loginPolymate()
+    // this.loginPolymate()
     if (!arrPages) return;
     this.arrPages = arrPages.map(page => ({
       ...page,
