@@ -181,7 +181,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   public async onFileChange(files) {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      this.uploadFileGapo(file).then(imgUrl => {
+      this.uploadFile(file).then(imgUrl => {
         if (this.isVideo) this.showProgress = false;
         this.arrImages.push(imgUrl)
       });
