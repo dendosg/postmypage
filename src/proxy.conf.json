@@ -1,0 +1,7 @@
+{
+  "/media/*": {
+    "target": "https://upload.gapo.vn",
+    "secure": false,
+    "logLevel": "info"
+  }
+}
