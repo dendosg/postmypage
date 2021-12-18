@@ -30,6 +30,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   isVideo = false;
   arrImageOnStorage = [];
   private polymateToken = '';
+  private gapoToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImp0aSI6IjgyODA4NzY5My4xMGE0OTc1Yy0zMWE0LTQ3ZGEtYTQ2Yy0wZGY0MWFkMGI5ZTMuMTYzOTgwMTEyOSJ9.eyJpc3MiOiJnYXBvLnZuIiwiYXVkIjoid2VicGMuZ2Fwby52biIsImp0aSI6IjgyODA4NzY5My4xMGE0OTc1Yy0zMWE0LTQ3ZGEtYTQ2Yy0wZGY0MWFkMGI5ZTMuMTYzOTgwMTEyOSIsImlhdCI6MTYzOTgwMTExOSwibmJmIjoxNjM5ODAxMTE5LCJ1aWQiOjgyODA4NzY5MywiZXhwIjoxNjQ0OTg1MTE5fQ.gs63M8Mlz4Jc1YDD-2MATqhY-0J3FW5Htk_qjDNoRUtxrJw2ZqigicLalOD1Z_z3br4lqj23Y5Xc565YbFmxhxu289-wCyVEEf5CS5gYycymJUu2hlbteOh4VoSMPrQgCSdCjOkHPRRQKZyPqz2yWP5Oj30sEr90S7pL3vEbG4I';
 
   constructor(
     private _db: AngularFireDatabase,
@@ -120,6 +121,29 @@ export class HomeComponent extends BaseComponent implements OnInit {
       .catch(() => Promise.resolve(null))
   }
 
+  public uploadFileGapo = async (file) => {
+    if (!file) return Promise.resolve(null);
+    const formData = new FormData();
+    formData.append("image", file);
+    let type = "image";
+    if (file.type.includes("video")) {
+      this.showProgress = true
+      this.isVideo = true;
+      type = "video";
+    }
+    return fetch('/media/v1.0/images', {
+      body: formData,
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${this.gapoToken}`,
+      }
+    }).then(res => res.json()).then(res => {
+      const permalink = get(res, 'src')
+      return permalink;
+    })
+      .catch(() => Promise.resolve(null))
+  }
+
   public uploadFileV2 = async (file) => {
     if (!file) return Promise.resolve(null);
     const formData = new FormData();
@@ -157,7 +181,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   public async onFileChange(files) {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      this.uploadFile(file).then(imgUrl => {
+      this.uploadFileGapo(file).then(imgUrl => {
         if (this.isVideo) this.showProgress = false;
         this.arrImages.push(imgUrl)
       });
