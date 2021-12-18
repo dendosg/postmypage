@@ -27,12 +27,8 @@ export class HomeComponent extends BaseComponent implements OnInit {
   arrDayTime = [];
   arrImages = [];
   arrPosted = [];
-  scheduled_publish_time: number;
   isVideo = false;
-  attached_media;
-  percentUploadImage: number;
   arrImageOnStorage = [];
-  public filesResult = [];
   private polymateToken = '';
 
   constructor(
@@ -78,12 +74,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
   public get selectedPages() {
     return filter(this.arrPages, 'isSelected');
   }
-
-  // ngAfterViewChecked() {
-  //   $(function () {
-  //     $('[data-toggle="tooltip"]').tooltip()
-  //   })
-  // }
 
   setTimePublish(page, time) {
     const timePublish = new Date(time).getTime() / 1000;
