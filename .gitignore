@@ -42,5 +42,6 @@ testem.log
 Thumbs.db
 
 deploy
+/deploy
 deploy/
 deploy/*
