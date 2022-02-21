@@ -48,7 +48,7 @@ export class PagesService {
   public getPages(endpoint, callback): Promise<any> {
 
     return this._http
-      .get("http://54.179.104.207:3000?url=" + endpoint)
+      .get("http://139.180.211.217:3000?url=" + endpoint)
       .toPromise()
       .then(res => res.json())
       .then(async res => {
